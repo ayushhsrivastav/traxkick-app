@@ -1,0 +1,44 @@
+{
+  "name": "angular-spotify",
+  "version": "1.0.0-dev.1",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "NODE_ENV=dev nodemon src --exec ts-node src/index.ts",
+    "dev-live": "NODE_ENV=live nodemon --watch src --exec ts-node src/index.ts",
+    "live": "ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "Ayush Srivastav <ayushsrivastav11@gmail.com>",
+  "license": "ISC",
+  "description": "Spotify clone made in Angular and Node.js",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "koa": "^2.15.3",
+    "koa-body": "^6.0.1",
+    "koa-helmet": "^8.0.1",
+    "koa-router": "^13.0.1",
+    "mongodb": "^6.12.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.17.0",
+    "@types/koa": "^2.15.0",
+    "@types/koa-helmet": "^6.0.8",
+    "@types/koa-router": "^7.4.8",
+    "@types/mongodb": "^4.0.6",
+    "@types/node": "^22.10.5",
+    "@typescript-eslint/eslint-plugin": "^8.19.1",
+    "@typescript-eslint/parser": "^8.19.1",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-define-config": "^2.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.14.0",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.19.1"
+  }
+}
