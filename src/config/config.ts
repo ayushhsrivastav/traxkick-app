@@ -8,6 +8,7 @@ else dotEnv.config();
 
 export default {
   port: Number(env.PORT) || 3000,
+  is_server: env.IS_SERVER === 'true',
   environment: env.ENVIRONMENT,
   clientUrl: env.CLIENT_URL,
   serverUrl: env.SERVER_URL,
@@ -18,6 +19,8 @@ export default {
     reconnection: env.DATABASE_RECONNECTION === 'true',
   },
   jwt: {
-    secretKey: env.JWT_SECRET_KEY,
+    secretKey: env.JWT_SECRET_KEY!,
+    accessTokenSecret: env.ACCESS_TOKEN_SECRET!,
+    refreshTokenSecret: env.REFRESH_TOKEN_SECRET!,
   },
 };

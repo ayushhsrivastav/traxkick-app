@@ -1,9 +1,14 @@
+// Packages import
 import koa from 'koa';
 import helmet from 'koa-helmet';
-import database from '../database/connection';
 import koaRouter from 'koa-router';
+import bodyParser from 'koa-bodyparser';
+
+// Dependencies
+import database from '../database/connection';
 import config from '../../config/config';
 import routes from '../routes';
+import { handleError } from '../middlewares/error.middleware';
 
 class Server {
   private app: koa;
@@ -28,6 +33,12 @@ class Server {
   }
 
   private async attachMiddleware() {
+    // Attach body parser to get request body
+    this.app.use(bodyParser());
+
+    // Error middleware
+    this.app.use(handleError);
+
     // Use Helmet to enable the XSS filter to protect against cross-site scripting (XSS) attacks
     this.app.use(helmet.xssFilter());
 
