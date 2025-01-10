@@ -1,4 +1,4 @@
-import { fetchDetails } from '../../controllers/client.controller';
+import { login } from '../../controllers/client.controller';
 import { RequestMethod, RouteModule } from '../route.interface';
 
 const routeModule: RouteModule = {
@@ -8,8 +8,8 @@ const routeModule: RouteModule = {
   routeDefinitions: [
     {
       method: RequestMethod.POST,
-      endpoint: '/fetchDetails',
-      action: fetchDetails,
+      endpoint: '/login',
+      action: login,
     },
   ],
 };
