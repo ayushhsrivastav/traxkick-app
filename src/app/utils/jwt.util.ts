@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 // Dependencies
 import config from '../../config/config';
 
-export async function generateToken(
+export function generateToken(
   user_id: string,
   is_refresh_token: boolean = false
 ) {
@@ -16,10 +16,7 @@ export async function generateToken(
   });
 }
 
-export async function verifyToken(
-  token: string,
-  is_refresh_token: boolean = false
-) {
+export function verifyToken(token: string, is_refresh_token: boolean = false) {
   try {
     let payload;
     if (is_refresh_token)

@@ -2,7 +2,7 @@
 import { Context, Next } from 'koa';
 
 // Dependencies
-import { BaseError } from '../utils/error.utils';
+import { BaseError } from '../utils/error.util';
 import { reportError } from '../errors/report-error.error';
 
 export async function handleError(ctx: Context, next: Next) {
