@@ -1,6 +1,6 @@
 import config from '../../config/config';
 import { errorGateway } from '../database';
-import { BaseError } from '../utils/error.utils';
+import { BaseError } from '../utils/error.util';
 
 export async function reportError(error: BaseError) {
   const { report_error, ...body } = error;
