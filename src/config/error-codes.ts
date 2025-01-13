@@ -31,6 +31,10 @@ export const error_codes = {
     message: 'Minimum length for password is 6 characters',
     code: 107,
   },
+  INVALID_TOKEN: {
+    message: 'Invalid token provided',
+    code: 108,
+  },
 };
 
 export type ErrorKeys = keyof typeof error_codes;
