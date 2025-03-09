@@ -1,3 +1,19 @@
 @import '../../styles/auth-form.scss';
 
 /* Component specific styles can go here if needed */
+
+.form-wrapper {
+  form {
+    fieldset {
+      position: relative;
+      small {
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 5px;
+        font-size: 12px;
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+}
