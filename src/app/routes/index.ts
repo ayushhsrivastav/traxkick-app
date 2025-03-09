@@ -4,6 +4,7 @@ import Router from 'koa-router';
 
 // Import route modules
 import ClientRoutes from './client';
+import AuthRoutes from './auth';
 import { RouteModule } from './route.interface';
 
 class RouteManager {
@@ -21,6 +22,7 @@ class RouteManager {
 
   private configureRoutes() {
     this.registerRoutes(ClientRoutes, '');
+    this.registerRoutes(AuthRoutes, '');
   }
 
   private registerRoutes(routeModules: RouteModule[], rootPath = '') {
