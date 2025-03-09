@@ -1,0 +1,58 @@
+<div class="form-wrapper">
+    <h1>Sign up</h1>
+    <form [formGroup]="userInfo" (submit)="onSubmit()">
+        <fieldset>
+            <input id="username" formControlName="username" type="text" placeholder="Username" />
+            @if (userInfo.get('username')?.invalid && userInfo.get('username')?.touched) {
+            @if(userInfo.get('username')?.errors?.['required']) {
+            <small>Username is required.</small>
+            }
+            @if(userInfo.get('username')?.errors?.['minlength']) {
+            <small>Username must be at least 3 characters.</small>
+            }
+            }
+        </fieldset>
+
+        <fieldset>
+            <input id="email" formControlName="email" type="email" placeholder="Email" />
+            @if (userInfo.get('email')?.invalid && userInfo.get('email')?.touched) {
+            @if(userInfo.get('email')?.errors?.['required']) {
+            <small>Email is required.</small>
+            }
+            @if(userInfo.get('email')?.errors?.['email']) {
+            <small>Please enter a valid email address.</small>
+            }
+            }
+        </fieldset>
+
+        <fieldset>
+            <input id="password" formControlName="password" type="password" placeholder="Password" />
+            @if(userInfo.get('password')?.invalid && userInfo.get('password')?.touched) {
+            @if(userInfo.get('password')?.errors?.['required']) {
+            <small>Password is required.</small>
+            }
+            @if(userInfo.get('password')?.errors?.['minlength']) {
+            <small>Password must be at least 6 characters.</small>
+            }
+            }
+        </fieldset>
+
+        <fieldset>
+            <input id="confirmPassword" formControlName="confirmPassword" type="password"
+                placeholder="Confirm Password" />
+            @if(userInfo.get('confirmPassword')?.touched) {
+            @if(userInfo.errors?.['mismatch']) {
+            <small>Passwords do not match.</small>
+            }
+            }
+        </fieldset>
+
+        <fieldset>
+            <button type="submit" [disabled]="userInfo.invalid">Sign Up</button>
+        </fieldset>
+
+        <div class="login-link">
+            Already have an account? <a routerLink="/login">Log in</a>
+        </div>
+    </form>
+</div>

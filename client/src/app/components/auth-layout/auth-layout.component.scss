@@ -1,0 +1,25 @@
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.auth-content {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 40px;
+    
+    .logo-img {
+        width: 200px;
+        height: auto;
+        object-fit: contain;
+    }
+}
