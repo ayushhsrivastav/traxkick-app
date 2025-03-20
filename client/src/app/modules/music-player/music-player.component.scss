@@ -1,0 +1,317 @@
+:host {
+  display: block;
+  
+  .bg-background {
+    background-color: #181818;
+  }
+  
+  .border-t {
+    border-color: #282828;
+  }
+  
+  button {
+    &:hover {
+      transform: scale(1.04);
+      transition: transform 0.2s ease;
+    }
+  }
+  
+  .progress-bar, .volume-bar {
+    cursor: pointer;
+    &:hover {
+      .bg-primary {
+        background-color: var(--primary-color);
+      }
+    }
+  }
+  
+  i {
+    color: #ffffff;
+  }
+  
+  .text-muted-foreground {
+    color: #a7a7a7;
+  }
+  
+  .track-info {
+    h6 {
+      color: #ffffff;
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+    
+    p {
+      color: #a7a7a7;
+      &:hover {
+        color: #ffffff;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.player-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 90px;
+    background-color: #181818;
+    border-top: 1px solid #282828;
+    z-index: 100;
+}
+
+.player-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    padding: 0 16px;
+}
+
+// Track Info Section
+.track-info {
+    flex: 1;
+    min-width: 180px;
+    max-width: 30%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .album-cover {
+        width: 56px;
+        height: 56px;
+        border-radius: 4px;
+        object-fit: cover;
+    }
+
+    .track-details {
+        .track-name {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0;
+            cursor: pointer;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .artist-name {
+            color: #a7a7a7;
+            font-size: 11px;
+            margin: 0;
+            cursor: pointer;
+            &:hover {
+                color: #fff;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .track-actions {
+        display: flex;
+        gap: 16px;
+    }
+}
+
+// Player Controls Section
+.player-controls {
+    flex: 2;
+    max-width: 722px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    .control-buttons {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 8px;
+
+        .control-btn {
+            background: transparent;
+            border: none;
+            color: #b3b3b3;
+            cursor: pointer;
+            padding: 8px;
+            
+            i {
+                font-size: 18px;
+            }
+
+            &:hover {
+                color: #ffffff;
+                transform: scale(1.1);
+            }
+        }
+
+        .play-pause-btn {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            padding: 8px;
+            
+            i {
+                font-size: 32px;
+            }
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+    }
+}
+
+// Playback Bar
+.playback-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .time {
+        color: #a7a7a7;
+        font-size: 11px;
+        min-width: 40px;
+    }
+
+    .progress-bar {
+        flex: 1;
+        height: 4px;
+        position: relative;
+        cursor: pointer;
+
+        .progress-slider {
+            background-color: #4d4d4d;
+            height: 100%;
+            border-radius: 2px;
+            position: relative;
+
+            &:hover {
+                .progress-complete {
+                    background-color: #1db954;
+                }
+                .progress-handle {
+                    display: block;
+                }
+            }
+        }
+
+        .progress-complete {
+            background-color: #fff;
+            width: 30%;
+            height: 100%;
+            border-radius: 2px;
+        }
+
+        .progress-handle {
+            display: none;
+            position: absolute;
+            right: -6px;
+            top: -6px;
+            width: 12px;
+            height: 12px;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+    }
+}
+
+// Volume Controls Section
+.volume-controls {
+    flex: 1;
+    min-width: 180px;
+    max-width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+
+    .volume-bar {
+        width: 93px;
+        height: 4px;
+        position: relative;
+        cursor: pointer;
+
+        .volume-slider {
+            background-color: #4d4d4d;
+            height: 100%;
+            border-radius: 2px;
+            position: relative;
+
+            &:hover {
+                .volume-complete {
+                    background-color: #1db954;
+                }
+                .volume-handle {
+                    display: block;
+                }
+            }
+        }
+
+        .volume-complete {
+            background-color: #fff;
+            width: 50%;
+            height: 100%;
+            border-radius: 2px;
+        }
+
+        .volume-handle {
+            display: none;
+            position: absolute;
+            right: -6px;
+            top: -6px;
+            width: 12px;
+            height: 12px;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+    }
+}
+
+// Common Button Styles
+.control-btn, .action-btn {
+    background: none;
+    border: none;
+    color: #a7a7a7;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+        color: #fff;
+        transform: scale(1.04);
+    }
+
+    i {
+        font-size: 16px;
+    }
+}
+
+.action-btn {
+    i {
+        font-size: 14px;
+    }
+}
+
+.progress-slider,
+.volume-slider {
+    position: relative;
+    height: 4px;
+
+    &:hover {
+        .progress-handle,
+        .volume-handle {
+            display: block;
+        }
+    }
+}

@@ -1,0 +1,36 @@
+<header>
+    <div class="header-container">
+        <div class="left-section">
+            <a [routerLink]="isHome ? null : '/home'" class="logo-link">
+                <img src="assets/img/logo_main.png" alt="Logo" />
+            </a>
+
+            <nav class="nav-links">
+                <a href="#" class="nav-link">Playlists</a>
+            </nav>
+        </div>
+
+        <div class="search-section">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" placeholder="What do you want to listen to?" class="search-input">
+            </div>
+        </div>
+
+        <div class="right-section">
+            <!-- <a href="#" class="nav-link">Sign up</a>
+            <button class="login-btn">Log in</button> -->
+            <a href="admin" class="nav-link">Admin</a>
+
+            <div class="profile-container">
+                @if (profileImage) {
+                <img [src]="profileImage" alt="Profile" class="profile-image">
+                } @else {
+                <div class="profile-placeholder" [style.background-color]="backgroundColor">
+                    <span>{{getFirstLetter()}}</span>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</header>

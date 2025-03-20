@@ -47,6 +47,12 @@
             }
         </fieldset>
 
+        @if (signupError) {
+        <div class="error-message">
+            {{ signupError }}
+        </div>
+        }
+
         <fieldset>
             <button type="submit" [disabled]="userInfo.invalid">Sign Up</button>
         </fieldset>

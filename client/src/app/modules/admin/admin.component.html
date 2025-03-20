@@ -1,0 +1,138 @@
+<!-- <p-toast /> -->
+
+<div class="admin-container">
+    <h1>Add or Edit Details</h1>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button [class.active]="activeTab === 'singer'" (click)="setActiveTab('singer')">Singer</button>
+        <button [class.active]="activeTab === 'album'" (click)="setActiveTab('album')">Album</button>
+        <button [class.active]="activeTab === 'song'" (click)="setActiveTab('song')">Song</button>
+    </div>
+
+    <!-- Singer Form -->
+    <div class="form-container" *ngIf="activeTab === 'singer'">
+        <div class="existing-items">
+            <select class="dropdown" [(ngModel)]="selectedSingerId">
+                <option [ngValue]="null" disabled selected>Select existing singer</option>
+                <option *ngFor="let singer of singers" [ngValue]="singer._id">{{ singer.name }}</option>
+            </select>
+        </div>
+
+        <form (submit)="submitSingerForm()">
+            <div class="form-group">
+                <label for="singerName">Singer Name *</label>
+                <input type="text" id="singerName" name="singerName" [(ngModel)]="singerForm.name"
+                    placeholder="Enter singer name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="profileImage">Profile Image URL *</label>
+                <input type="url" id="profileImage" name="profileImage" [(ngModel)]="singerForm.profileImage"
+                    placeholder="https://example.com/profile-image.jpg" required>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Album Form -->
+    <div class="form-container" *ngIf="activeTab === 'album'">
+        <div class="existing-items">
+            <select class="dropdown" [(ngModel)]="selectedAlbumId">
+                <option [ngValue]="null" disabled selected>Select existing album</option>
+                <option *ngFor="let album of albums" [ngValue]="album._id">{{ album.name }}</option>
+            </select>
+        </div>
+
+        <form (submit)="submitAlbumForm()">
+            <div class="form-group">
+                <label for="albumName">Name *</label>
+                <input type="text" id="albumName" name="albumName" [(ngModel)]="albumForm.name"
+                    placeholder="Enter album name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="albumImage">Image URL *</label>
+                <input type="url" id="albumImage" name="albumImage" [(ngModel)]="albumForm.imageUrl"
+                    placeholder="https://example.com/album-cover.jpg" required>
+            </div>
+
+            <div class="form-group">
+                <label for="albumYear">Year *</label>
+                <input type="number" id="albumYear" name="albumYear" [(ngModel)]="albumForm.year" placeholder="2023"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="albumSinger">Singer *</label>
+                <select class="dropdown" id="albumSinger" name="albumSinger" [(ngModel)]="albumForm.singerId" required>
+                    <option [ngValue]="null" disabled selected>Select singer</option>
+                    <option *ngFor="let singer of singers" [ngValue]="singer._id">{{ singer.name }}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="copyright">Copyright</label>
+                <input type="text" id="copyright" name="copyright" [(ngModel)]="albumForm.copyright"
+                    placeholder="© 2023 Side-Stream Records">
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Song Form -->
+    <div class="form-container" *ngIf="activeTab === 'song'">
+        <div class="existing-items">
+            <select class="dropdown" [(ngModel)]="selectedSongId">
+                <option [ngValue]="null" disabled selected>Select existing song</option>
+                <option *ngFor="let song of songs" [ngValue]="song._id">{{ song.name }}</option>
+            </select>
+        </div>
+
+        <form (submit)="submitSongForm()">
+            <div class="form-group">
+                <label for="songName">Name *</label>
+                <input type="text" id="songName" name="songName" [(ngModel)]="songForm.name"
+                    placeholder="Enter song name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="songSinger">Singer *</label>
+                <select id="songSinger" name="songSinger" [(ngModel)]="songForm.singerId" required>
+                    <option [ngValue]="null" disabled selected>Select singer</option>
+                    <option *ngFor="let singer of singers" [ngValue]="singer._id">{{ singer.name }}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="songAlbum">Album *</label>
+                <select id="songAlbum" name="songAlbum" [(ngModel)]="songForm.albumId" required>
+                    <option value="" disabled selected>Select album</option>
+                    <option *ngFor="let album of albums" [value]="album._id">{{ album.name }}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="songImage">Image URL *</label>
+                <input type="url" id="songImage" name="songImage" [(ngModel)]="songForm.imageUrl"
+                    placeholder="https://example.com/song-cover.jpg" required>
+            </div>
+
+            <div class="form-group file-input-group">
+                <label for="songFileLabel">Song File <span *ngIf="!selectedSongId">*</span></label>
+                <div class="file-input-container">
+                    <input type="file" accept="audio/*" id="songFile" name="songFile"
+                        (change)="onSongFileSelected($event)" [required]="!selectedSongId" class="file-input">
+                    <div class="file-input-controls">
+                        <span class="file-name">{{ songForm.songFile || 'No file selected' }}</span>
+                        <label for="songFile" class="browse-button">Browse</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+:host {
+  display: block;
+  
+  .min-h-screen {
+    min-height: 100vh;
+  }
+  
+  .bg-background {
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  main {
+    // Add padding to account for fixed top and bottom bars
+    padding-top: 64px;  // Adjust based on your top bar height
+    padding-bottom: 90px;  // Adjust based on your music player height
+    
+    // Add a gradient background effect
+    background: linear-gradient(
+      180deg,
+      rgba(18,18,18,0.8) 0%,
+      rgba(18,18,18,1) 100%
+    );
+  }
+  
+  // Custom scrollbar
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+    
+    &:hover {
+      background: #555;
+    }
+  }
+}

@@ -24,6 +24,12 @@
             }
         </fieldset>
 
+        @if (loginError) {
+        <div class="error-message">
+            {{ loginError }}
+        </div>
+        }
+
         <fieldset>
             <button type="submit" [disabled]="userInfo.invalid">Log In</button>
         </fieldset>
