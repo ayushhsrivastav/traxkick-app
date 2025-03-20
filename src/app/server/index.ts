@@ -2,13 +2,14 @@
 import koa from 'koa';
 import helmet from 'koa-helmet';
 import koaRouter from 'koa-router';
-import bodyParser from 'koa-bodyparser';
+import koaBody from 'koa-body';
+import path from 'path';
 
 // Dependencies
 import database from '../database/connection';
 import config from '../../config/config';
 import routes from '../routes';
-import { handleError } from '../middlewares/error.middleware';
+import { corsMiddleware, handleError } from '../middlewares';
 
 class Server {
   private app: koa;
@@ -33,35 +34,38 @@ class Server {
   }
 
   private async attachMiddleware() {
-    // Attach body parser to get request body
-    this.app.use(bodyParser());
+    // Attach CORS middleware
+    this.app.use(corsMiddleware);
+
+    // Attach `koa-body` to handle JSON, form-data & file uploads
+    this.app.use(
+      koaBody({
+        multipart: true, // Enable file uploads
+        json: true,
+        formidable: {
+          uploadDir: path.join(__dirname, './uploads/temp'), // Directory for file uploads
+          keepExtensions: true, // Keep file extensions
+        },
+      })
+    );
 
     // Error middleware
     this.app.use(handleError);
 
-    // Use Helmet to enable the XSS filter to protect against cross-site scripting (XSS) attacks
+    // Use Helmet for security headers
     this.app.use(helmet.xssFilter());
-
-    // Use Helmet to set Content Security Policy (CSP) for the application
     this.app.use(
       helmet.contentSecurityPolicy({
         directives: {
-          // Restrict the default source to only the same origin (self)
           defaultSrc: ["'self'"],
-
-          // Allow styles to be loaded only from the same origin (self)
           styleSrc: ["'self'"],
-
-          // Allow inline scripts, which may be necessary for certain client-side functionality
           scriptSrc: ["'unsafe-inline'"],
         },
       })
     );
 
-    // Attach the Koa router's routes as middleware, allowing for route handling
+    // Attach routes
     this.app.use(this.router.routes());
-
-    // Attach allowed methods middleware for responding with appropriate HTTP methods (e.g., GET, POST)
     this.app.use(this.router.allowedMethods());
   }
 

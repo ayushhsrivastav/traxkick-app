@@ -3,7 +3,7 @@
   "version": "1.0.0-dev.1",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "NODE_ENV=dev nodemon src --exec ts-node src/index.ts",
+    "dev": "NODE_ENV=dev nodemon --watch src --exec ts-node src/index.ts",
     "dev-live": "NODE_ENV=live nodemon --watch src --exec ts-node src/index.ts",
     "live": "ts-node src/index.ts"
   },
@@ -12,8 +12,12 @@
   "license": "ISC",
   "description": "Spotify clone made in Angular and Node.js",
   "dependencies": {
+    "@types/koa-cookie": "^1.0.3",
+    "aws-sdk": "^2.1692.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
+    "formidable": "^3.5.2",
+    "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "koa": "^2.15.3",
     "koa-body": "^6.0.1",

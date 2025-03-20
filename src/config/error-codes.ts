@@ -19,21 +19,25 @@ export const error_codes = {
     message: 'Username was not passed',
     code: 104,
   },
+  EMAIL_NOT_PASSED: {
+    message: 'Email was not passed',
+    code: 105,
+  },
   PASSWORD_NOT_PASSED: {
     message: 'Password was not passed',
-    code: 105,
+    code: 106,
   },
   CREATED_AT_NOT_PASSED: {
     message: 'Created at not passes',
-    code: 106,
+    code: 107,
   },
   MIN_LEN_PASSWORD: {
     message: 'Minimum length for password is 6 characters',
-    code: 107,
+    code: 108,
   },
   INVALID_TOKEN: {
     message: 'Invalid token provided',
-    code: 108,
+    code: 109,
   },
 };
 

@@ -7,12 +7,22 @@ import { hashPassword } from '../utils/bcrypt.util';
 import { ErrorKeys } from '../../config/error-codes';
 
 export const userInsertSchema = z.object({
-  username: z.string().refine(val => val !== undefined, {
-    message: 'USERNAME_NOT_PASSED' as ErrorKeys,
-  }),
+  username: z
+    .string()
+    .optional()
+    .refine(val => val !== undefined, {
+      message: 'USERNAME_NOT_PASSED' as ErrorKeys,
+    }),
+  email: z
+    .string()
+    .optional()
+    .refine(val => val !== undefined, {
+      message: 'EMAIL_NOT_PASSED' as ErrorKeys,
+    }),
   password: z
     .string()
     .min(6, { message: 'MIN_LEN_PASSWORD' as ErrorKeys })
+    .optional()
     .refine(val => val !== undefined, {
       message: 'PASSWORD_NOT_PASSED' as ErrorKeys,
     })
