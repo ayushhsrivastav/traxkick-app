@@ -1,5 +1,3 @@
-<!-- <p-toast /> -->
-
 <div class="admin-container">
     <h1>Add or Edit Details</h1>
 
@@ -11,11 +9,14 @@
     </div>
 
     <!-- Singer Form -->
-    <div class="form-container" *ngIf="activeTab === 'singer'">
+    @if (activeTab === 'singer') {
+    <div class="form-container">
         <div class="existing-items">
             <select class="dropdown" [(ngModel)]="selectedSingerId">
                 <option [ngValue]="null" disabled selected>Select existing singer</option>
-                <option *ngFor="let singer of singers" [ngValue]="singer._id">{{ singer.name }}</option>
+                @for (singer of singers; track singer._id) {
+                <option [ngValue]="singer._id">{{ singer.name }}</option>
+                }
             </select>
         </div>
 
@@ -35,13 +36,17 @@
             <button type="submit">Submit</button>
         </form>
     </div>
+    }
 
     <!-- Album Form -->
-    <div class="form-container" *ngIf="activeTab === 'album'">
+    @if (activeTab === 'album') {
+    <div class="form-container">
         <div class="existing-items">
             <select class="dropdown" [(ngModel)]="selectedAlbumId">
                 <option [ngValue]="null" disabled selected>Select existing album</option>
-                <option *ngFor="let album of albums" [ngValue]="album._id">{{ album.name }}</option>
+                @for (album of albums; track album._id) {
+                <option [ngValue]="album._id">{{ album.name }}</option>
+                }
             </select>
         </div>
 
@@ -68,7 +73,9 @@
                 <label for="albumSinger">Singer *</label>
                 <select class="dropdown" id="albumSinger" name="albumSinger" [(ngModel)]="albumForm.singerId" required>
                     <option [ngValue]="null" disabled selected>Select singer</option>
-                    <option *ngFor="let singer of singers" [ngValue]="singer._id">{{ singer.name }}</option>
+                    @for (singer of singers; track singer._id) {
+                    <option [ngValue]="singer._id">{{ singer.name }}</option>
+                    }
                 </select>
             </div>
 
@@ -81,13 +88,17 @@
             <button type="submit">Submit</button>
         </form>
     </div>
+    }
 
     <!-- Song Form -->
-    <div class="form-container" *ngIf="activeTab === 'song'">
+    @if (activeTab === 'song') {
+    <div class="form-container">
         <div class="existing-items">
             <select class="dropdown" [(ngModel)]="selectedSongId">
                 <option [ngValue]="null" disabled selected>Select existing song</option>
-                <option *ngFor="let song of songs" [ngValue]="song._id">{{ song.name }}</option>
+                @for (song of songs; track song._id) {
+                <option [ngValue]="song._id">{{ song.name }}</option>
+                }
             </select>
         </div>
 
@@ -102,7 +113,9 @@
                 <label for="songSinger">Singer *</label>
                 <select id="songSinger" name="songSinger" [(ngModel)]="songForm.singerId" required>
                     <option [ngValue]="null" disabled selected>Select singer</option>
-                    <option *ngFor="let singer of singers" [ngValue]="singer._id">{{ singer.name }}</option>
+                    @for (singer of singers; track singer._id) {
+                    <option [ngValue]="singer._id">{{ singer.name }}</option>
+                    }
                 </select>
             </div>
 
@@ -110,7 +123,9 @@
                 <label for="songAlbum">Album *</label>
                 <select id="songAlbum" name="songAlbum" [(ngModel)]="songForm.albumId" required>
                     <option value="" disabled selected>Select album</option>
-                    <option *ngFor="let album of albums" [value]="album._id">{{ album.name }}</option>
+                    @for (album of albums; track album._id) {
+                    <option [value]="album._id">{{ album.name }}</option>
+                    }
                 </select>
             </div>
 
@@ -121,7 +136,7 @@
             </div>
 
             <div class="form-group file-input-group">
-                <label for="songFileLabel">Song File <span *ngIf="!selectedSongId">*</span></label>
+                <label for="songFileLabel">Song File @if (!selectedSongId) { <span>*</span> }</label>
                 <div class="file-input-container">
                     <input type="file" accept="audio/*" id="songFile" name="songFile"
                         (change)="onSongFileSelected($event)" [required]="!selectedSongId" class="file-input">
@@ -135,4 +150,5 @@
             <button type="submit">Submit</button>
         </form>
     </div>
+    }
 </div>

@@ -183,6 +183,7 @@ form {
     
     /* Hide the spinner buttons for number inputs */
     input[type="number"] {
+      appearance: textfield;
       -moz-appearance: textfield; /* Firefox */
       &::-webkit-outer-spin-button,
       &::-webkit-inner-spin-button {
