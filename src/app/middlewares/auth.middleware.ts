@@ -1,6 +1,6 @@
 import { Context, Next } from 'koa';
 import { verifyToken } from '../utils/jwt.util';
-import { credentialsGateway } from '../database';
+import { usersGateway } from '../database';
 
 export const authentication = async (ctx: Context, next: Next) => {
   const token = ctx.cookies.get('access_token');
@@ -24,27 +24,52 @@ export const authentication = async (ctx: Context, next: Next) => {
   }
 };
 
-export const credentials = async (ctx: Context, next: Next) => {
-  const { access_id, access_key } = ctx.request.headers;
+export const isAdmin = async (ctx: Context, next: Next) => {
+  const token = ctx.cookies.get('access_token');
 
-  if (!access_id || !access_key) {
-    ctx.status = 401;
-    ctx.body = {
-      status: 'failed',
-      message: 'Access ID or Access Key not found',
-    };
-    return;
-  }
-
-  if (
-    (await credentialsGateway.findOne({
-      query: { access_id, access_key },
-    })) === null
-  ) {
+  if (!token) {
     ctx.status = 401;
     ctx.body = { status: 'failed', message: 'Authentication failed' };
     return;
   }
 
-  await next();
+  try {
+    const payload = verifyToken(token);
+    const userDetails = await usersGateway.findOne({
+      query: { username: payload.username },
+    });
+
+    if (!userDetails?.is_admin) {
+      ctx.status = 402;
+      ctx.body = { status: 'failed', message: 'Unauthorized' };
+      return;
+    }
+    await next();
+  } catch {
+    ctx.status = 403;
+    ctx.body = { status: 'failed', message: 'Unauthorized' };
+    return;
+  }
+};
+
+export const isUserAdmin = async (ctx: Context) => {
+  const token = ctx.cookies.get('access_token');
+
+  if (!token) {
+    return false;
+  }
+
+  try {
+    const payload = verifyToken(token);
+    const userDetails = await usersGateway.findOne({
+      query: { username: payload.username },
+    });
+
+    if (!userDetails?.is_admin) {
+      return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
 };

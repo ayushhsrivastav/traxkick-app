@@ -3,7 +3,6 @@ import koa from 'koa';
 import helmet from 'koa-helmet';
 import koaRouter from 'koa-router';
 import koaBody from 'koa-body';
-import path from 'path';
 
 // Dependencies
 import database from '../database/connection';
@@ -43,7 +42,7 @@ class Server {
         multipart: true, // Enable file uploads
         json: true,
         formidable: {
-          uploadDir: path.join(__dirname, './uploads/temp'), // Directory for file uploads
+          uploadDir: 'uploads/temp', // Directory for file uploads
           keepExtensions: true, // Keep file extensions
         },
       })

@@ -49,6 +49,12 @@ export class AuthService {
     );
   }
 
+  checkAdminUser(): Observable<boolean> {
+    return this.http.get<boolean>(`${this.serverUrl}/auth/role`, {
+      withCredentials: true,
+    });
+  }
+
   logout(): void {
     this.cookieService.deleteAll();
     window.location.href = '/login';

@@ -1,6 +1,8 @@
 import AWS from 'aws-sdk';
 import config from '../../config/config';
 import { readFile, unlink } from 'fs/promises';
+import { reportError } from '../errors/report-error.error';
+import { BaseError } from '../utils/error.util';
 
 const s3 = new AWS.S3({
   accessKeyId: config.aws.accessKeyId,
@@ -12,19 +14,23 @@ export async function uploadFile(
   filePath: string,
   fileName: string
 ): Promise<string> {
-  const fileStream = await readFile(filePath);
+  try {
+    const fileStream = await readFile(filePath);
 
-  const params = {
-    Bucket: config.aws.bucketName,
-    Key: `music/${fileName}_${Date.now()}`,
-    Body: fileStream,
-    ContentType: 'audio/mpeg',
-    ACL: 'public-read',
-  };
+    const params = {
+      Bucket: config.aws.bucketName,
+      Key: `music/${fileName}_${Date.now()}`,
+      Body: fileStream,
+      ContentType: 'audio/mpeg',
+    };
 
-  const result = await s3.upload(params).promise();
+    const result = await s3.upload(params).promise();
 
-  await unlink(filePath);
+    await unlink(filePath);
 
-  return result.Location;
+    return result.Location;
+  } catch (error) {
+    reportError(error as BaseError);
+    throw error;
+  }
 }

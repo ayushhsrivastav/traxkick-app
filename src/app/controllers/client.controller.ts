@@ -1,7 +1,6 @@
 import { Context } from 'koa';
 import * as clientService from '../services/client.service';
 import config from '../../config/config';
-
 /**
  *
  * @param ctx Koa Context with all meta data
@@ -70,4 +69,29 @@ export async function signup(ctx: Context) {
       message: 'Signup failed',
     };
   }
+}
+
+/**
+ *
+ * @param ctx Koa Context with all meta data
+ * @description To logout a user and provided the access and refresh token
+ */
+export async function logout(ctx: Context) {
+  ctx.cookies.set('access_token', '', {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: config.is_server,
+    path: '/',
+  });
+  ctx.cookies.set('refresh_token', '', {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: config.is_server,
+    path: '/',
+  });
+  ctx.status = 200;
+  ctx.body = {
+    status: 'success',
+    message: 'Logout successful',
+  };
 }
