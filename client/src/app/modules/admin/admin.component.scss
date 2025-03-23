@@ -1,0 +1,378 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+:host {
+  --sidestream-primary: #DDDAC8;
+  --sidestream-black: #121212;
+  --sidestream-dark-grey: #181818;
+  --sidestream-medium-grey: #282828;
+  --sidestream-light-grey: #B3B3B3;
+  --sidestream-white: #FFFFFF;
+  --panel-radius: 8px;
+  --input-radius: 25px;
+  --transition-speed: 0.3s;
+}
+
+.admin-container {
+  font-family: 'Montserrat', sans-serif;
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: var(--sidestream-black);
+  color: var(--sidestream-white);
+  min-height: 100vh;
+  text-align: center;
+  
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--sidestream-medium-grey);
+    padding-bottom: 15px;
+    text-align: center;
+  }
+}
+
+.tabs {
+  display: flex;
+  margin-bottom: 30px;
+  justify-content: center;
+  background-color: var(--sidestream-dark-grey);
+  border-radius: 30px;
+  padding: 5px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--sidestream-light-grey);
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: all var(--transition-speed);
+    text-align: center;
+    
+    &:hover {
+      color: var(--sidestream-white);
+    }
+    
+    &.active {
+      background-color: var(--sidestream-primary);
+      color: var(--sidestream-black);
+      
+      &:hover {
+        filter: brightness(0.9);
+      }
+    }
+  }
+}
+
+.form-container {
+  background-color: var(--sidestream-dark-grey);
+  border-radius: var(--panel-radius);
+  padding: 25px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.existing-items {
+  margin-bottom: 25px;
+  text-align: center;
+  
+  .dropdown-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--sidestream-white);
+    text-align: center;
+  }
+  
+  .dropdown {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 15px;
+    border-radius: var(--input-radius);
+    background-color: var(--sidestream-medium-grey);
+    border: 1px solid var(--sidestream-medium-grey);
+    color: var(--sidestream-white);
+    font-size: 14px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    text-align: center;
+    text-align-last: center;
+    margin: 0 auto;
+    
+    /* Custom dropdown arrow */
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 12'%3E%3Cpath fill='%23B3B3B3' d='M4 8L0 4h8zm0-8l4 4H0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 8px 10px;
+    
+    /* For IE - hide default arrow */
+    &::-ms-expand {
+      display: none;
+    }
+    
+    option {
+      padding: 10px;
+      text-align: center;
+      color: var(--sidestream-white);
+      background-color: var(--sidestream-dark-grey);
+      
+      /* Special styling for first option (placeholder) */
+      &:first-child {
+        font-style: italic;
+        color: var(--sidestream-light-grey);
+      }
+    }
+  }
+}
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  
+  .form-group {
+    margin-bottom: 20px;
+    text-align: center;
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--sidestream-light-grey);
+      text-align: center;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: var(--input-radius);
+      background-color: var(--sidestream-medium-grey);
+      border: 1px solid var(--sidestream-medium-grey);
+      color: var(--sidestream-white);
+      font-size: 14px;
+      transition: all var(--transition-speed);
+      text-align: center;
+      height: 45px; /* Consistent height for all form elements */
+      
+      &:focus {
+        outline: none;
+        border-color: var(--sidestream-primary);
+        box-shadow: 0 0 0 2px rgba(221, 218, 200, 0.3);
+      }
+      
+      &::placeholder {
+        color: var(--sidestream-light-grey);
+        text-align: center;
+      }
+    }
+    
+    /* Style the placeholder option in selects */
+    select option[disabled] {
+      color: var(--sidestream-light-grey);
+    }
+    
+    /* Hide the spinner buttons for number inputs */
+    input[type="number"] {
+      appearance: textfield;
+      -moz-appearance: textfield; /* Firefox */
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+    
+    /* Custom styled file input */
+    &.file-input-group {
+      .file-input-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background-color: var(--sidestream-medium-grey);
+        border-radius: var(--input-radius);
+        border: 1px solid var(--sidestream-medium-grey);
+        padding: 0;
+        overflow: hidden;
+        height: 45px;
+        
+        &:focus-within {
+          border-color: var(--sidestream-primary);
+          box-shadow: 0 0 0 2px rgba(221, 218, 200, 0.3);
+        }
+        
+        .file-input {
+          position: absolute;
+          width: 0.1px;
+          height: 0.1px;
+          opacity: 0;
+          overflow: hidden;
+          z-index: -1;
+        }
+        
+        .file-input-controls {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          
+          .file-name {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            color: var(--sidestream-light-grey);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          
+          .browse-button {
+            background-color: var(--sidestream-primary);
+            color: var(--sidestream-black);
+            height: 100%;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all var(--transition-speed);
+            margin: 0;
+            
+            &:hover {
+              filter: brightness(0.9);
+            }
+          }
+        }
+      }
+    }
+    
+    /* Dropdown styling */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      text-align-last: center; /* For Firefox */
+      padding-right: 30px; /* Space for the custom dropdown arrow */
+      
+      /* Custom dropdown arrow */
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 12'%3E%3Cpath fill='%23B3B3B3' d='M4 8L0 4h8zm0-8l4 4H0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 8px 10px;
+      
+      /* For IE - hide default arrow */
+      &::-ms-expand {
+        display: none;
+      }
+      
+      option {
+        text-align: center;
+      }
+    }
+  }
+  
+  button[type="submit"] {
+    background-color: var(--sidestream-primary);
+    color: var(--sidestream-black);
+    border: none;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 10px auto;
+    display: block;
+    width: 200px;
+    
+    &:hover {
+      transform: scale(1.05);
+      filter: brightness(0.95);
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+// Force text color in Firefox
+@-moz-document url-prefix() {
+  .existing-items .dropdown {
+    color: var(--sidestream-white) !important;
+    text-align: center !important;
+    
+    option {
+      text-align: center;
+      background-color: var(--sidestream-dark-grey);
+    }
+    
+    option[disabled] {
+      color: var(--sidestream-white) !important;
+      font-style: normal !important;
+    }
+  }
+}
+
+// Webkit-specific styles for the dropdown placeholder
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  .existing-items .dropdown {
+    color: var(--sidestream-white) !important;
+    
+    option {
+      color: var(--sidestream-white);
+    }
+    
+    option[disabled] {
+      color: var(--sidestream-white) !important;
+    }
+  }
+}
+
+// Custom styling for file inputs (if they're still needed)
+input[type="file"] {
+  &::file-selector-button {
+    border: none;
+    padding: 5px 12px;
+    border-radius: 25px;
+    background-color: var(--sidestream-primary);
+    color: var(--sidestream-black);
+    font-weight: 600;
+    margin-right: 15px;
+    cursor: pointer;
+    
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+}
+
+// Make the entire form responsive
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 20px 15px;
+  }
+  
+  .tabs button {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .form-container {
+    padding: 20px 15px;
+  }
+}

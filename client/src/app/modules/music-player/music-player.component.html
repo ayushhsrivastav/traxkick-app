@@ -1,0 +1,80 @@
+<div class="player-container">
+    <div class="player-content">
+        <!-- Left: Track Info -->
+        <div class="track-info">
+            <img src="assets/album-covers/instant_crush.png" alt="Album Cover" class="album-cover">
+            <div class="track-details">
+                <h6 class="track-name">Instant Crush</h6>
+                <p class="artist-name">Daft Punk ft. Julian Casablancas</p>
+            </div>
+            <div class="track-actions" (click)="isLiked = !isLiked">
+                @if (isLiked) {
+                <button class="action-btn">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+                }
+                @else {
+                <button class="action-btn">
+                    <i class="far fa-heart"></i>
+                </button>
+                }
+            </div>
+        </div>
+
+        <!-- Center: Player Controls -->
+        <div class="player-controls">
+            <div class="control-buttons">
+                <button class="control-btn">
+                    <i class="fa-solid fa-shuffle"></i>
+                </button>
+                <button class="control-btn">
+                    <i class="fa-solid fa-backward-step"></i>
+                </button>
+                <button class="play-pause-btn" (click)="togglePlay()">
+                    <i class="fa-solid" [class.fa-circle-play]="!isPlaying" [class.fa-circle-pause]="isPlaying"></i>
+                </button>
+                <button class="control-btn">
+                    <i class="fa-solid fa-forward-step"></i>
+                </button>
+                <button class="control-btn">
+                    <i class="fa-solid fa-repeat"></i>
+                </button>
+            </div>
+
+            <div class="playback-bar">
+                <span class="time">{{ formatTime(currentTime) }}</span>
+                <div class="progress-bar" (click)="updateProgress($event)">
+                    <div class="progress-slider">
+                        <div class="progress-complete" [style.width]="getProgressStyle()"></div>
+                        <div class="progress-handle" [style.left]="getProgressStyle()"></div>
+                    </div>
+                </div>
+                <span class="time">{{ formatTime(duration) }}</span>
+            </div>
+        </div>
+
+        <!-- Right: Volume Controls -->
+        <div class="volume-controls">
+            <button class="control-btn">
+                <i class="fas fa-list"></i>
+            </button>
+            <button class="control-btn volume-btn">
+                <span class="volume-icon-wrapper">
+                    @if (currentVolume > 50) {
+                    <i class="fas fa-volume-high"></i>
+                    } @else if (currentVolume <= 50 && currentVolume> 0) {
+                        <i class="fas fa-volume-low"></i>
+                        } @else if (currentVolume == 0) {
+                        <i class="fas fa-volume-xmark"></i>
+                        }
+                </span>
+            </button>
+            <div class="volume-bar">
+                <div class="volume-slider" (click)="updateVolume($event)">
+                    <div class="volume-complete" [style.width]="getVolumeStyle()"></div>
+                    <div class="volume-handle" [style.left]="getVolumeStyle()"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

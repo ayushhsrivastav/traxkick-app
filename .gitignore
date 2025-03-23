@@ -135,3 +135,6 @@ dist
 
 #env files
 environments/
+
+#Local files
+uploads/

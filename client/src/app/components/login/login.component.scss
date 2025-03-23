@@ -1,4 +1,4 @@
-@import '../../styles/auth-form.scss';
+@use '../../styles/auth-form.scss';
 
 /* Component specific styles can go here if needed */
 
@@ -16,4 +16,10 @@
       }
     }
   }
+}
+
+.error-message {
+  color: #dc3545;
+  margin: 10px 0;
+  text-align: center;
 }

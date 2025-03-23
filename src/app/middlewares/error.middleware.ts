@@ -14,7 +14,8 @@ export async function handleError(ctx: Context, next: Next) {
     } else {
       ctx.body = {
         status: 'failed',
-        error,
+        error:
+          error instanceof Error ? error.message : 'An unknown error occurred',
       };
     }
   }

@@ -53,5 +53,5 @@ export interface DeleteOne<T extends Document> {
 
 export interface Aggregate<T extends Document> {
   pipleline: T[];
-  options: AggregateOptions;
+  options?: AggregateOptions;
 }

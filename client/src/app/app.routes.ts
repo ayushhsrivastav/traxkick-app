@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
+import { LoginGuard } from './guards/login.guard';
 
 export const routes: Routes = [
   {
@@ -25,6 +27,34 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./components/signup/signup.component').then(
             m => m.SignupComponent
+          ),
+      },
+    ],
+    canActivate: [LoginGuard],
+  },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./components/dashboard/dashboard.component').then(
+        m => m.DashboardComponent
+      ),
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'home',
+        loadComponent: () =>
+          import('./modules/home/home.component').then(m => m.HomeComponent),
+      },
+      {
+        path: 'admin',
+        loadComponent: () =>
+          import('./modules/admin/admin.component').then(m => m.AdminComponent),
+      },
+      {
+        path: 'playlists',
+        loadComponent: () =>
+          import('./modules/playlist/playlist.component').then(
+            m => m.PlaylistComponent
           ),
       },
     ],

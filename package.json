@@ -3,7 +3,7 @@
   "version": "1.0.0-dev.1",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "NODE_ENV=dev nodemon src --exec ts-node src/index.ts",
+    "dev": "NODE_ENV=dev nodemon --watch src --exec ts-node src/index.ts",
     "dev-live": "NODE_ENV=live nodemon --watch src --exec ts-node src/index.ts",
     "live": "ts-node src/index.ts"
   },
@@ -12,8 +12,12 @@
   "license": "ISC",
   "description": "Spotify clone made in Angular and Node.js",
   "dependencies": {
+    "@types/koa-cookie": "^1.0.3",
+    "aws-sdk": "^2.1692.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
+    "fs": "^0.0.1-security",
+    "got": "^14.4.6",
     "jsonwebtoken": "^9.0.2",
     "koa": "^2.15.3",
     "koa-body": "^6.0.1",
@@ -21,13 +25,14 @@
     "koa-cookies": "^4.0.3",
     "koa-helmet": "^8.0.1",
     "koa-router": "^13.0.1",
-    "mongodb": "^6.12.0",
+    "mongodb": "^6.15.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.17.0",
     "@types/bcrypt": "^5.0.2",
+    "@types/got": "^9.6.12",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/koa": "^2.15.0",
     "@types/koa-bodyparser": "^4.3.12",
