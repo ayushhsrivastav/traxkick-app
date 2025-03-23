@@ -6,7 +6,7 @@
             </a>
 
             <nav class="nav-links">
-                <a href="#" class="nav-link">Playlists</a>
+                <a [routerLink]="['/playlists']" class="nav-link">Playlists</a>
             </nav>
         </div>
 
@@ -20,7 +20,9 @@
         <div class="right-section">
             <!-- <a href="#" class="nav-link">Sign up</a>
             <button class="login-btn">Log in</button> -->
-            <a href="admin" class="nav-link">Admin</a>
+            @if(isAdmin) {
+            <a [routerLink]="['/admin']" class="nav-link">Admin</a>
+            }
 
             <div class="profile-container">
                 @if (profileImage) {

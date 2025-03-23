@@ -12,8 +12,8 @@
     @if (activeTab === 'singer') {
     <div class="form-container">
         <div class="existing-items">
-            <select class="dropdown" [(ngModel)]="selectedSingerId">
-                <option [ngValue]="null" disabled selected>Select existing singer</option>
+            <select class="dropdown" [(ngModel)]="selectedSingerId" (change)="onSingerChange()">
+                <option [ngValue]="null" selected>Select existing singer</option>
                 @for (singer of singers; track singer._id) {
                 <option [ngValue]="singer._id">{{ singer.name }}</option>
                 }
@@ -29,11 +29,11 @@
 
             <div class="form-group">
                 <label for="profileImage">Profile Image URL *</label>
-                <input type="url" id="profileImage" name="profileImage" [(ngModel)]="singerForm.profileImage"
+                <input type="url" id="profileImage" name="profileImage" [(ngModel)]="singerForm.image_url"
                     placeholder="https://example.com/profile-image.jpg" required>
             </div>
 
-            <button type="submit">Submit</button>
+            <button type="submit" [disabled]="!singerForm.image_url || !singerForm.name">Submit</button>
         </form>
     </div>
     }
@@ -42,7 +42,7 @@
     @if (activeTab === 'album') {
     <div class="form-container">
         <div class="existing-items">
-            <select class="dropdown" [(ngModel)]="selectedAlbumId">
+            <select class="dropdown" [(ngModel)]="selectedAlbumId" (change)="onAlbumChange()">
                 <option [ngValue]="null" disabled selected>Select existing album</option>
                 @for (album of albums; track album._id) {
                 <option [ngValue]="album._id">{{ album.name }}</option>
@@ -59,7 +59,7 @@
 
             <div class="form-group">
                 <label for="albumImage">Image URL *</label>
-                <input type="url" id="albumImage" name="albumImage" [(ngModel)]="albumForm.imageUrl"
+                <input type="url" id="albumImage" name="albumImage" [(ngModel)]="albumForm.image_url"
                     placeholder="https://example.com/album-cover.jpg" required>
             </div>
 
@@ -71,7 +71,7 @@
 
             <div class="form-group">
                 <label for="albumSinger">Singer *</label>
-                <select class="dropdown" id="albumSinger" name="albumSinger" [(ngModel)]="albumForm.singerId" required>
+                <select class="dropdown" id="albumSinger" name="albumSinger" [(ngModel)]="albumForm.artist_id" required>
                     <option [ngValue]="null" disabled selected>Select singer</option>
                     @for (singer of singers; track singer._id) {
                     <option [ngValue]="singer._id">{{ singer.name }}</option>
@@ -82,7 +82,7 @@
             <div class="form-group">
                 <label for="copyright">Copyright</label>
                 <input type="text" id="copyright" name="copyright" [(ngModel)]="albumForm.copyright"
-                    placeholder="© 2023 Side-Stream Records">
+                    [placeholder]="'© ' + currentYear + ' Side-Stream Records'">
             </div>
 
             <button type="submit">Submit</button>
@@ -94,7 +94,7 @@
     @if (activeTab === 'song') {
     <div class="form-container">
         <div class="existing-items">
-            <select class="dropdown" [(ngModel)]="selectedSongId">
+            <select class="dropdown" [(ngModel)]="selectedSongId" (change)="onSongChange()">
                 <option [ngValue]="null" disabled selected>Select existing song</option>
                 @for (song of songs; track song._id) {
                 <option [ngValue]="song._id">{{ song.name }}</option>
@@ -111,7 +111,8 @@
 
             <div class="form-group">
                 <label for="songSinger">Singer *</label>
-                <select id="songSinger" name="songSinger" [(ngModel)]="songForm.singerId" required>
+                <select id="songSinger" name="songSinger" [(ngModel)]="songForm.artist_id" required
+                    (change)="onSingerChangeInSong()">
                     <option [ngValue]="null" disabled selected>Select singer</option>
                     @for (singer of singers; track singer._id) {
                     <option [ngValue]="singer._id">{{ singer.name }}</option>
@@ -120,34 +121,35 @@
             </div>
 
             <div class="form-group">
-                <label for="songAlbum">Album *</label>
-                <select id="songAlbum" name="songAlbum" [(ngModel)]="songForm.albumId" required>
-                    <option value="" disabled selected>Select album</option>
-                    @for (album of albums; track album._id) {
-                    <option [value]="album._id">{{ album.name }}</option>
+                <label for="songAlbum">Album</label>
+                <select id="songAlbum" name="songAlbum" [(ngModel)]="songForm.album_id">
+                    <option [ngValue]="null" disabled selected>Select album</option>
+                    @for (album of selectedSingerAlbums; track album._id) {
+                    <option [ngValue]="album._id">{{ album.name }}</option>
                     }
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="songImage">Image URL *</label>
-                <input type="url" id="songImage" name="songImage" [(ngModel)]="songForm.imageUrl"
+                <input type="url" id="songImage" name="songImage" [(ngModel)]="songForm.image_url"
                     placeholder="https://example.com/song-cover.jpg" required>
             </div>
 
             <div class="form-group file-input-group">
-                <label for="songFileLabel">Song File @if (!selectedSongId) { <span>*</span> }</label>
+                <label for="songFileLabel">Song File <span *ngIf="!selectedSongId">*</span></label>
                 <div class="file-input-container">
-                    <input type="file" accept="audio/*" id="songFile" name="songFile"
-                        (change)="onSongFileSelected($event)" [required]="!selectedSongId" class="file-input">
+                    <input type="file" accept="audio/*" id="songFile" name="songFile" class="file-input"
+                        (change)="onSongFileSelected($event)">
                     <div class="file-input-controls">
-                        <span class="file-name">{{ songForm.songFile || 'No file selected' }}</span>
+                        <span class="file-name">{{ songForm.file?.name || 'No file selected' }}</span>
                         <label for="songFile" class="browse-button">Browse</label>
                     </div>
                 </div>
             </div>
 
-            <button type="submit">Submit</button>
+            <button type="submit"
+                [disabled]="!songForm.file || !songForm.name || !songForm.artist_id || !songForm.album_id || !songForm.image_url">Submit</button>
         </form>
     </div>
     }

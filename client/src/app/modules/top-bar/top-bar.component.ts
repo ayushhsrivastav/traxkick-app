@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { AuthGuard } from '../../guards/auth.guard';
 
 @Component({
   selector: 'app-top-bar',
@@ -8,12 +9,14 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.scss',
 })
-export class TopBarComponent {
+export class TopBarComponent implements OnInit {
   private readonly router = inject(Router);
+  readonly authGuard = inject(AuthGuard);
   isHome: boolean = false;
   username: string = 'Ayush';
   profileImage: string | null = null;
   backgroundColor: string;
+  isAdmin: boolean = false;
 
   private colors = [
     '#1DB954', // Spotify green
@@ -33,6 +36,12 @@ export class TopBarComponent {
       this.isHome = this.router.url === '/home';
     });
     this.backgroundColor = this.getRandomColor();
+  }
+
+  ngOnInit(): void {
+    this.authGuard.isAdmin().subscribe(res => {
+      this.isAdmin = res;
+    });
   }
 
   getFirstLetter(): string {

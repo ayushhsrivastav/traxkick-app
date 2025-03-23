@@ -4,106 +4,113 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LoadingService } from '../../services/loading.service';
 import { ApiService } from '../../services/api.service';
-// import { ToastModule } from 'primeng/toast';
-// import { MessageService } from 'primeng/api';
-
-interface Singer {
-  _id: number;
-  name: string;
-  profileImage: string;
-}
-
-interface Album {
-  _id: number;
-  name: string;
-  imageUrl: string;
-  year: number;
-  singerId: number;
-  singerName: string;
-  copyright: string;
-}
-
-interface Song {
-  _id: number;
-  name: string;
-  singerId: number;
-  singerName: string;
-  albumId: number;
-  albumName: string;
-  imageUrl: string;
-  songFile: string;
-}
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { AvatarModule } from 'primeng/avatar';
+import { ButtonModule } from 'primeng/button';
+import { Album, Singer, Song } from '../../interfaces/api.interface';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ToastModule, AvatarModule, ButtonModule],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
 })
 export class AdminComponent implements OnInit {
   private loadingService = inject(LoadingService);
   private apiService = inject(ApiService);
-  // private messageService = inject(MessageService);
+  private messageService = inject(MessageService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   activeTab: 'singer' | 'album' | 'song' = 'singer';
 
-  // Selection trackers - adding these properties to fix the error
-  selectedSingerId: number | null = null;
-  selectedAlbumId: number | null = null;
-  selectedSongId: number | null = null;
+  selectedSingerId: string | null = null;
+  selectedAlbumId: string | null = null;
+  selectedSongId: string | null = null;
 
-  // Mock data for examples
+  currentYear: number = new Date().getFullYear();
+
   singers: Singer[] = [];
 
   albums: Album[] = [];
 
+  selectedSingerAlbums: Album[] = [];
+
   songs: Song[] = [];
 
-  // Form models
-  singerForm = {
+  singerForm: { name: string; image_url: string } = {
     name: '',
-    profileImage: '',
+    image_url: '',
   };
 
-  albumForm = {
+  albumForm: {
+    name: string;
+    image_url: string;
+    year: number;
+    artist_id: string | null;
+    copyright: string;
+  } = {
     name: '',
-    imageUrl: '',
-    year: new Date().getFullYear(),
-    singerId: 0,
+    image_url: '',
+    year: this.currentYear,
+    artist_id: null,
     copyright: '',
   };
 
-  songForm = {
+  songForm: {
+    name: string;
+    artist_id: string | null;
+    album_id: string | null;
+    image_url: string;
+    file: File | null;
+  } = {
     name: '',
-    singerId: 0,
-    albumId: 0,
-    imageUrl: '',
-    songFile: '',
+    artist_id: null,
+    album_id: null,
+    image_url: '',
+    file: null,
   };
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.loadingService.show();
-    this.fetchDetails();
+    this.authService.checkAdminUser().subscribe({
+      next: (res: any) => {
+        if (!res) {
+          this.router.navigate(['/not-found']);
+          return;
+        }
+      },
+    });
+    await this.fetchDetails();
   }
 
-  fetchDetails(): void {
-    this.apiService.request('GET', 'admin/details', {}).subscribe({
-      next: (res: any) => {
-        this.singers = res.singers;
-        this.albums = res.albums;
-        this.songs = res.songs;
-        this.loadingService.hide();
-      },
-      error: (err: any) => {
-        console.error(err);
-        this.loadingService.hide();
-        // this.messageService.add({
-        //   severity: 'error',
-        //   summary: 'Error',
-        //   detail: err.error.message || err.message || 'Failed to fetch details',
-        // });
-      },
+  async fetchDetails(): Promise<void> {
+    return new Promise(resolve => {
+      this.loadingService.show();
+      this.apiService.request('GET', 'info/get-details', {}).subscribe({
+        next: (res: any) => {
+          this.singers = res.singerDetails || [];
+          this.albums = res.albumDetails || [];
+          this.songs = res.songDetails || [];
+          this.loadingService.hide();
+          resolve();
+        },
+        error: (err: any) => {
+          this.loadingService.hide();
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail:
+              err.error.message || err.message || 'Failed to fetch details',
+            closable: false,
+          });
+          resolve();
+        },
+      });
     });
   }
 
@@ -116,101 +123,350 @@ export class AdminComponent implements OnInit {
     this.selectedSingerId = null;
     this.selectedAlbumId = null;
     this.selectedSongId = null;
+    this.selectedSingerAlbums = [];
 
     this.singerForm = {
       name: '',
-      profileImage: '',
+      image_url: '',
     };
 
     this.albumForm = {
       name: '',
-      imageUrl: '',
+      image_url: '',
       year: new Date().getFullYear(),
-      singerId: 0,
+      artist_id: null,
       copyright: '',
     };
 
     this.songForm = {
       name: '',
-      singerId: 0,
-      albumId: 0,
-      imageUrl: '',
-      songFile: '',
+      artist_id: null,
+      album_id: null,
+      image_url: '',
+      file: null,
     };
   }
 
-  // File handling for profile image
-  onProfileImageSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      // In a real app, you would upload this file to a server
-      // For now, just store the file name
-      this.singerForm.profileImage = file.name;
-    }
-  }
-
-  // File handling for song upload
   onSongFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
-      // In a real app, you would upload this file to a server
-      // For now, just store the file name
-      this.songForm.songFile = file.name;
+      this.songForm.file = file;
+    } else {
+      this.songForm.file = null;
     }
   }
 
-  // Form submissions
+  onSingerChange(): void {
+    this.singerForm.name =
+      this.singers.find(singer => singer._id === this.selectedSingerId)?.name ||
+      '';
+    this.singerForm.image_url =
+      this.singers.find(singer => singer._id === this.selectedSingerId)
+        ?.image_url || '';
+  }
+
+  onAlbumChange(): void {
+    const album = this.albums.find(album => album._id === this.selectedAlbumId);
+    if (!album) {
+      return;
+    }
+    this.albumForm.name = album.name;
+    this.albumForm.image_url = album.image_url;
+    this.albumForm.year = album.year;
+    if (album.artist_id) {
+      this.albumForm.artist_id = album.artist_id;
+    }
+    if (album.copyright) {
+      this.albumForm.copyright = album.copyright;
+    }
+  }
+
+  onSongChange(): void {
+    const song = this.songs.find(song => {
+      return song._id === this.selectedSongId;
+    });
+    if (!song) {
+      return;
+    }
+    this.songForm.name = song.name;
+    this.songForm.artist_id = song.artist_id;
+    this.songForm.album_id = song.album_id;
+    this.songForm.image_url = song.image_url;
+    this.onSingerChangeInSong();
+  }
+
+  onSingerChangeInSong(): void {
+    this.selectedSingerAlbums = this.albums.filter(
+      album => album.artist_id === this.songForm.artist_id
+    );
+  }
+
   submitSingerForm(): void {
-    // Validate required fields
-    if (!this.singerForm.name || !this.singerForm.profileImage) {
-      alert('Please fill in all required fields');
+    if (!this.singerForm.name || !this.singerForm.image_url) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill in all required fields',
+      });
       return;
     }
 
-    console.log('Singer form submitted:', this.singerForm);
-    // Here you would typically call a service to save the data
+    const { name, image_url } = this.singerForm;
 
-    // Reset form after submission
+    this.loadingService.show();
+    if (this.selectedSingerId) {
+      this.apiService
+        .request('POST', 'upload/update-artist', {
+          _id: this.selectedSingerId,
+          name,
+          image_url,
+        })
+        .subscribe({
+          next: async (res: any) => {
+            if (res?.status === 'success') {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: res.message || 'Artist updated successfully',
+              });
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: res.message || 'Failed to update artist',
+              });
+            }
+            await this.fetchDetails();
+          },
+          error: async (err: any) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail:
+                err.error.message || err.message || 'Failed to update artist',
+            });
+            await this.fetchDetails();
+          },
+        });
+    } else {
+      this.apiService
+        .request('POST', 'upload/insert-artist', {
+          name,
+          image_url,
+        })
+        .subscribe({
+          next: async (res: any) => {
+            if (res?.status === 'success') {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Artist added successfully with id: ' + res.artist_id,
+              });
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: res.message || 'Failed to add artist',
+              });
+            }
+            await this.fetchDetails();
+          },
+          error: async (err: any) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail:
+                err.error.message || err.message || 'Failed to add artist',
+            });
+            await this.fetchDetails();
+          },
+        });
+    }
+
     this.resetForms();
   }
 
   submitAlbumForm(): void {
-    // Validate required fields
     if (
       !this.albumForm.name ||
-      !this.albumForm.imageUrl ||
+      !this.albumForm.image_url ||
       !this.albumForm.year ||
-      !this.albumForm.singerId
+      !this.albumForm.artist_id
     ) {
-      alert('Please fill in all required fields');
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill in all required fields',
+      });
       return;
     }
 
-    console.log('Album form submitted:', this.albumForm);
-    // Reset form after submission
+    const { name, image_url, year, artist_id, copyright } = this.albumForm;
+
+    this.loadingService.show();
+    if (this.selectedAlbumId) {
+      this.apiService
+        .request('POST', 'upload/update-album', {
+          _id: this.selectedAlbumId,
+          name,
+          image_url,
+          year,
+          artist_id,
+          copyright,
+        })
+        .subscribe({
+          next: async (res: any) => {
+            if (res?.status === 'success') {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: res.message || 'Album updated successfully',
+              });
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: res.message || 'Failed to update album',
+              });
+            }
+            await this.fetchDetails();
+          },
+          error: async (err: any) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail:
+                err.error.message || err.message || 'Failed to update album',
+            });
+            await this.fetchDetails();
+          },
+        });
+    } else {
+      this.apiService
+        .request('POST', 'upload/insert-album', {
+          name,
+          image_url,
+          year,
+          artist_id,
+          copyright,
+        })
+        .subscribe({
+          next: async (res: any) => {
+            if (res?.status === 'success') {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Album added successfully with id: ' + res.album_id,
+              });
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: res.message || 'Failed to add album',
+              });
+            }
+            await this.fetchDetails();
+          },
+          error: async (err: any) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: err.error.message || err.message || 'Failed to add album',
+            });
+            await this.fetchDetails();
+          },
+        });
+    }
+
     this.resetForms();
   }
 
   submitSongForm(): void {
-    // Validate required fields
     if (
       !this.songForm.name ||
-      !this.songForm.imageUrl ||
-      !this.songForm.singerId ||
-      !this.songForm.albumId
+      !this.songForm.image_url ||
+      !this.songForm.artist_id ||
+      !this.songForm.album_id
     ) {
-      alert('Please fill in all required fields');
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill in all required fields',
+      });
       return;
     }
 
-    // Song file is required only for new songs
-    if (!this.selectedSongId && !this.songForm.songFile) {
-      alert('Please provide a song file URL');
-      return;
-    }
+    const { name, image_url, artist_id, album_id } = this.songForm;
 
-    console.log('Song form submitted:', this.songForm);
-    // Reset form after submission
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('image_url', image_url);
+    formData.append('artist_id', artist_id);
+    if (album_id) formData.append('album_id', album_id);
+    if (this.songForm.file) formData.append('file', this.songForm.file);
+
+    this.loadingService.show();
+    if (this.selectedSongId) {
+      formData.append('_id', this.selectedSongId);
+      this.apiService
+        .request('POST', 'upload/update-song', formData)
+        .subscribe({
+          next: async (res: any) => {
+            if (res?.status === 'success') {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: res.message || 'Song updated successfully',
+              });
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: res.message || 'Failed to update song',
+              });
+            }
+            await this.fetchDetails();
+          },
+          error: async (err: any) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail:
+                err.error.message || err.message || 'Failed to update song',
+            });
+            await this.fetchDetails();
+          },
+        });
+    } else {
+      this.apiService
+        .request('POST', 'upload/insert-song', formData)
+        .subscribe({
+          next: async (res: any) => {
+            if (res?.status === 'success') {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Song added successfully with id: ' + res.song_id,
+              });
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: res.message || 'Failed to add song',
+              });
+            }
+            await this.fetchDetails();
+          },
+          error: async (err: any) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: err.error.message || err.message || 'Failed to add song',
+            });
+            await this.fetchDetails();
+          },
+        });
+    }
     this.resetForms();
   }
 }

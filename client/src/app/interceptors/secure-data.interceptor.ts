@@ -1,39 +1,44 @@
 import {
   HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
+  HttpHandlerFn,
+  HttpInterceptorFn,
   HttpRequest,
 } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import { Observable, catchError, switchMap, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+let refreshing = false;
 
-@Injectable()
-export class TokenInterceptor implements HttpInterceptor {
-  private refreshing = false;
-  private http = inject(HttpClient);
+export const TokenInterceptor: HttpInterceptorFn = (
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn
+): Observable<HttpEvent<unknown>> => {
+  const http = inject(HttpClient);
+  const serverUrl = environment.serverUrl;
 
-  intercept(
-    req: HttpRequest<unknown>,
-    next: HttpHandler
-  ): Observable<HttpEvent<unknown>> {
-    return next.handle(req).pipe(
-      catchError(error => {
-        if (error.status === 403 && !this.refreshing) {
-          this.refreshing = true;
-          return this.http.post('/auth/refresh-token', {}).pipe(
+  return next(req).pipe(
+    catchError(error => {
+      if (error.status === 403 && !refreshing) {
+        refreshing = true;
+        return http
+          .post(
+            `${serverUrl}/auth/refresh-token`,
+            {},
+            { withCredentials: true }
+          )
+          .pipe(
             switchMap(() => {
-              this.refreshing = false;
-              return next.handle(req);
+              refreshing = false;
+              return next(req);
             }),
             catchError(err => {
-              this.refreshing = false;
+              refreshing = false;
               return throwError(() => err);
             })
           );
-        }
-        return throwError(() => error);
-      })
-    );
-  }
-}
+      }
+      return throwError(() => error);
+    })
+  );
+};

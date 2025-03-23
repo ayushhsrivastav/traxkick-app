@@ -25,4 +25,18 @@ export class AuthGuard implements CanActivate {
       })
     );
   }
+
+  isAdmin(): Observable<boolean> {
+    return this.authService.checkAdminUser().pipe(
+      map(res => {
+        if (res) return true;
+        else {
+          return false;
+        }
+      }),
+      catchError(() => {
+        return [false];
+      })
+    );
+  }
 }

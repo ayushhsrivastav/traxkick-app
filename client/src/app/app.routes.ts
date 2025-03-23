@@ -51,7 +51,7 @@ export const routes: Routes = [
           import('./modules/admin/admin.component').then(m => m.AdminComponent),
       },
       {
-        path: 'playlist',
+        path: 'playlists',
         loadComponent: () =>
           import('./modules/playlist/playlist.component').then(
             m => m.PlaylistComponent
