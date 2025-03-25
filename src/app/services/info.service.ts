@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { albumsGateway, artistsGateway, musicGateway } from '../database';
 
 export async function getInfo() {
@@ -14,7 +15,7 @@ export async function getInfo() {
     pipleline: [
       {
         $lookup: {
-          from: 'dev_artists',
+          from: 'side_stream_artists',
           localField: 'artist_id',
           foreignField: '_id',
           as: 'artist',
@@ -41,7 +42,7 @@ export async function getInfo() {
     pipleline: [
       {
         $lookup: {
-          from: 'dev_artists',
+          from: 'side_stream_artists',
           localField: 'artist_id',
           foreignField: '_id',
           as: 'artist',
@@ -52,7 +53,7 @@ export async function getInfo() {
       },
       {
         $lookup: {
-          from: 'dev_albums',
+          from: 'side_stream_albums',
           localField: 'album_id',
           foreignField: '_id',
           as: 'album',
@@ -76,4 +77,134 @@ export async function getInfo() {
   });
 
   return { singerDetails, albumDetails, songDetails };
+}
+
+export async function getHomeInfo() {
+  const featuredAlbums = await albumsGateway.aggregate({
+    pipleline: [
+      {
+        $sort: {
+          year: -1,
+          updated_at: -1,
+        },
+      },
+      {
+        $sample: { size: 3 },
+      },
+      {
+        $lookup: {
+          from: 'side_stream_artists',
+          localField: 'artist_id',
+          foreignField: '_id',
+          as: 'artist',
+        },
+      },
+      {
+        $unwind: '$artist',
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          image_url: 1,
+          artist_name: '$artist.name',
+        },
+      },
+    ],
+  });
+
+  const trendingSongs = await musicGateway.aggregate({
+    pipleline: [
+      {
+        $sort: {
+          updated_at: -1,
+        },
+      },
+      {
+        $sample: { size: 5 },
+      },
+      {
+        $lookup: {
+          from: 'side_stream_artists',
+          localField: 'artist_id',
+          foreignField: '_id',
+          as: 'artist',
+        },
+      },
+      {
+        $unwind: '$artist',
+      },
+      {
+        $lookup: {
+          from: 'side_stream_albums',
+          localField: 'album_id',
+          foreignField: '_id',
+          as: 'album',
+        },
+      },
+      {
+        $unwind: '$album',
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          image_url: 1,
+          artist_name: '$artist.name',
+          album_name: '$album.name',
+        },
+      },
+    ],
+  });
+
+  return { featuredAlbums, trendingSongs };
+}
+
+export async function getAlbumDetails(albumId: string) {
+  const albumDetails = await albumsGateway.aggregate({
+    pipleline: [
+      {
+        $match: { _id: new ObjectId(albumId) },
+      },
+      {
+        $lookup: {
+          from: 'side_stream_artists',
+          localField: 'artist_id',
+          foreignField: '_id',
+          as: 'artist',
+        },
+      },
+      {
+        $unwind: '$artist',
+      },
+      {
+        $lookup: {
+          from: 'side_stream_music',
+          localField: '_id',
+          foreignField: 'album_id',
+          as: 'songs',
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          image_url: 1,
+          artist_name: '$artist.name',
+          year: 1,
+          songs: {
+            _id: 1,
+            name: 1,
+            duration: 1,
+          },
+        },
+      },
+    ],
+  });
+
+  if (Array.isArray(albumDetails) && albumDetails.length > 0) {
+    return albumDetails[0];
+  }
+
+  return null;
 }

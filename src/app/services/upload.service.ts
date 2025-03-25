@@ -35,16 +35,19 @@ export async function uploadSongDetails(params: {
     return { status: 'error', message: 'Album not found' };
   }
 
-  const music = await uploadFile(path, name.split(' ').join('_').toLowerCase());
+  const musicPath = await uploadFile(
+    path,
+    name.split(' ').join('_').toLowerCase()
+  );
 
-  if (!music) {
+  if (!musicPath) {
     return { status: 'error', message: 'Music not uploaded' };
   }
 
   const insertObject: Record<string, unknown> = {
     name,
     artist_id: new ObjectId(artist_id),
-    path: music,
+    key: musicPath,
     image_url,
     created_at: new Date(),
     updated_at: new Date(),

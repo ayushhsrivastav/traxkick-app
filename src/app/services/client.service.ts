@@ -42,13 +42,14 @@ export async function signup(
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errorMessage = error.errors[0].message;
-      throw new BaseError(errorMessage as ErrorKeys, true, true);
+      throw new BaseError(errorMessage as ErrorKeys, true, true, error);
     } else {
       const newError = error as { error_message: ErrorKeys };
       throw new BaseError(
         newError?.error_message || 'UNKNOWN_EXCEPTION',
         true,
-        true
+        true,
+        error
       );
     }
   }

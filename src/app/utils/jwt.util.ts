@@ -32,8 +32,8 @@ export function verifyToken(token: string, is_refresh_token: boolean = false) {
       return payload;
     }
 
-    throw new BaseError('INVALID_TOKEN', true);
-  } catch {
-    throw new BaseError('INVALID_TOKEN', true);
+    throw new BaseError('INVALID_TOKEN', true, true, 'Unknown Error');
+  } catch (error) {
+    throw new BaseError('INVALID_TOKEN', true, true, error);
   }
 }

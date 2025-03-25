@@ -39,6 +39,10 @@ export const error_codes = {
     message: 'Invalid token provided',
     code: 109,
   },
+  AWS_ERROR: {
+    message: 'AWS Error',
+    code: 110,
+  },
 };
 
 export type ErrorKeys = keyof typeof error_codes;

@@ -1,4 +1,8 @@
-import { getDetails } from '../../controllers/info.controller';
+import {
+  getDetails,
+  homeInfo,
+  albumDetails,
+} from '../../controllers/info.controller';
 import { authentication } from '../../middlewares';
 import { RequestMethod, RouteModule } from '../route.interface';
 
@@ -12,6 +16,16 @@ const routeModule: RouteModule = {
       method: RequestMethod.GET,
       endpoint: '/get-details',
       action: getDetails,
+    },
+    {
+      method: RequestMethod.GET,
+      endpoint: '/home-info',
+      action: homeInfo,
+    },
+    {
+      method: RequestMethod.GET,
+      endpoint: '/album/:id',
+      action: albumDetails,
     },
   ],
 };
