@@ -8,7 +8,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
-import { Album, Singer, Song } from '../../interfaces/api.interface';
+import { Album, Singer, Song } from '../../interfaces/data.interface';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 

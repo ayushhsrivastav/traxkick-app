@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TopBarComponent } from '../../modules/top-bar/top-bar.component';
 import { MusicPlayerComponent } from '../../modules/music-player/music-player.component';
 import { RouterOutlet } from '@angular/router';
+import { MessageService } from '../../shared/signals/message.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,4 +11,7 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent {}
+export class DashboardComponent {
+  private messageService = inject(MessageService);
+  showMusicPlayer = this.messageService.songId;
+}

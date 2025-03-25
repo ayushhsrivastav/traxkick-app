@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { MessageService } from '../../shared/signals/message.service';
 
 @Component({
   selector: 'app-music-player',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './music-player.component.scss',
 })
 export class MusicPlayerComponent implements OnInit {
+  private messageService = inject(MessageService);
+  currentSongId = this.messageService.songId;
   currentTime: number = 0;
   duration: number = 240;
   isPlaying: boolean = false;
@@ -20,6 +23,7 @@ export class MusicPlayerComponent implements OnInit {
       if (this.isPlaying && this.currentTime < this.duration) {
         this.currentTime++;
       }
+      console.log('---->', this.currentSongId());
     }, 1000);
   }
 
@@ -63,5 +67,9 @@ export class MusicPlayerComponent implements OnInit {
   getVolumeStyle(): string {
     if (this.currentVolume === 0) return '0%';
     return `${(this.currentVolume / 100) * 100}%`;
+  }
+
+  changeSong(songId: string): void {
+    console.log(songId);
   }
 }

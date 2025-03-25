@@ -1,0 +1,98 @@
+.album-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.album-header {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.album-cover {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.album-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  
+  h1 {
+    font-size: 2.5rem;
+    margin: 0;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    color: #666;
+    margin: 8px 0;
+  }
+}
+
+.songs-list {
+  .song-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 4px;
+    position: relative;
+    cursor: default;
+    user-select: none;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+  
+  .song-number {
+    width: 40px;
+    color: #666;
+  }
+  
+  .song-details {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: default;
+  }
+  
+  .song-name {
+    font-weight: 500;
+  }
+  
+  .song-duration {
+    color: #666;
+  }
+  
+  .play-button {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #DDDAC8;
+    color: black;
+    pointer-events: none;
+    transition: transform 0.2s ease;
+    will-change: transform, left;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    
+    &:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+  }
+}

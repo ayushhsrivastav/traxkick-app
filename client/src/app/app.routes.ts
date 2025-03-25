@@ -57,6 +57,18 @@ export const routes: Routes = [
             m => m.PlaylistComponent
           ),
       },
+      {
+        path: 'album/:id',
+        loadComponent: () =>
+          import('./modules/album/album.component').then(m => m.AlbumComponent),
+      },
+      {
+        path: 'song/:id',
+        loadComponent: () =>
+          import('./modules/song-page/song-page.component').then(
+            m => m.SongPageComponent
+          ),
+      },
     ],
   },
   {

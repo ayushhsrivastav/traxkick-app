@@ -1,0 +1,265 @@
+@use 'sass:color';
+
+// Variables
+$background: #121212;
+$text-primary: #ffffff;
+$text-secondary: #b3b3b3;
+$accent: #1db954;
+
+.home-container {
+  background: $background;
+  min-height: 100vh;
+  padding: 24px;
+  color: $text-primary;
+}
+
+.main-content {
+  max-width: 1800px;
+  margin: 0 auto;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 32px;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 48px 0 32px;
+  }
+}
+
+// Featured Albums
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.album-card {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+
+    .overlay {
+      opacity: 1;
+    }
+
+    .album-text {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .album-name {
+      opacity: 0;
+    }
+  }
+}
+
+.album-image {
+  position: relative;
+  width: 100%;
+  
+  img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
+  }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 4px;
+  }
+
+  .album-text {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+
+    h3 {
+      color: $text-primary;
+      font-size: 18px;
+      margin: 0 0 8px;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+}
+
+.album-name {
+  color: $text-primary;
+  font-size: 16px;
+  margin: 12px 0 0;
+  transition: opacity 0.3s ease;
+}
+
+// Trending Songs
+.trending-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.song-card {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+
+    .overlay {
+      opacity: 1;
+    }
+
+    .play-button {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .song-text {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .song-info {
+      opacity: 0;
+    }
+  }
+}
+
+.song-image {
+  position: relative;
+  width: 100%;
+
+  img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
+  }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 4px;
+  }
+
+  .play-button {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #DDDAC8;
+    border: none;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.1);
+      background: color.adjust(#DDDAC8, $lightness: -5%);
+    }
+
+    i {
+      font-size: 14px;
+      margin-left: 2px;
+    }
+  }
+
+  .song-text {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    text-align: right;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+
+    h4 {
+      color: $text-primary;
+      font-size: 16px;
+      margin: 0 0 4px;
+    }
+
+    p {
+      color: $text-secondary;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+}
+
+.song-info {
+  padding: 12px 0;
+  transition: opacity 0.3s ease;
+
+  h4 {
+    color: $text-primary;
+    font-size: 16px;
+    margin: 0 0 4px;
+  }
+
+  p {
+    color: $text-secondary;
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .home-container {
+    padding: 16px;
+  }
+
+  .featured-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .trending-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+
+  .main-content {
+    h1 {
+      font-size: 28px;
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 32px 0 24px;
+    }
+  }
+}

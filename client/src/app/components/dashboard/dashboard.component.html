@@ -5,5 +5,7 @@
         <router-outlet></router-outlet>
     </main>
 
-    <app-music-player></app-music-player>
+    @if(showMusicPlayer()) {
+    <app-music-player class="slide-up-animation"></app-music-player>
+    }
 </div>
