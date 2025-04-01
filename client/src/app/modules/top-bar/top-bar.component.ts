@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthGuard } from '../../guards/auth.guard';
-
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-top-bar',
   standalone: true,
@@ -12,11 +12,13 @@ import { AuthGuard } from '../../guards/auth.guard';
 export class TopBarComponent implements OnInit {
   private readonly router = inject(Router);
   readonly authGuard = inject(AuthGuard);
+  protected readonly authService = inject(AuthService);
   isHome: boolean = false;
   username: string = 'Ayush';
   profileImage: string | null = null;
   backgroundColor: string;
   isAdmin: boolean = false;
+  isDropdownOpen = false;
 
   private colors = [
     '#1DB954', // Spotify green

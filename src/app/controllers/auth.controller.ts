@@ -17,7 +17,7 @@ export async function getRefreshToken(ctx: Context) {
 
   try {
     const payload = verifyToken(refreshToken, true);
-    const newAccessToken = generateToken(payload?.username);
+    const newAccessToken = generateToken(payload?.username, payload?.is_admin);
 
     ctx.cookies.set('access_token', newAccessToken, {
       httpOnly: true,
@@ -41,9 +41,10 @@ export async function checkAuth(ctx: Context) {
   const accessToken = ctx.cookies.get('access_token');
 
   if (!accessToken) {
-    ctx.status = 401;
+    ctx.status = 202;
     ctx.body = { authenticated: false };
   } else {
+    ctx.status = 200;
     ctx.body = { authenticated: true };
   }
   return;

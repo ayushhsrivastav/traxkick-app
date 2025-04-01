@@ -1,7 +1,8 @@
 import {
+  albumDetails,
   getDetails,
   homeInfo,
-  albumDetails,
+  musicUrl,
 } from '../../controllers/info.controller';
 import { authentication } from '../../middlewares';
 import { RequestMethod, RouteModule } from '../route.interface';
@@ -26,6 +27,11 @@ const routeModule: RouteModule = {
       method: RequestMethod.GET,
       endpoint: '/album/:id',
       action: albumDetails,
+    },
+    {
+      method: RequestMethod.GET,
+      endpoint: '/music/:id',
+      action: musicUrl,
     },
   ],
 };

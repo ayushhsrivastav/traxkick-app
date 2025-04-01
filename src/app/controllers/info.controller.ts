@@ -3,6 +3,7 @@ import {
   getInfo,
   getHomeInfo,
   getAlbumDetails,
+  getMusicUrl,
 } from '../services/info.service';
 
 export async function getDetails(ctx: Context) {
@@ -27,5 +28,18 @@ export async function albumDetails(ctx: Context) {
 
   ctx.status = 200;
   ctx.body = albumDetails;
+  return;
+}
+
+export async function musicUrl(ctx: Context) {
+  const songId = ctx.params.id;
+  const musicUrl = await getMusicUrl(songId);
+  ctx.status = 200;
+  ctx.body = {
+    url: musicUrl?.url,
+    image_url: musicUrl?.image,
+    name: musicUrl?.name,
+    artist: musicUrl?.artist,
+  };
   return;
 }

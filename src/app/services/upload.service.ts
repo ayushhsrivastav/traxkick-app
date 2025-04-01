@@ -47,7 +47,7 @@ export async function uploadSongDetails(params: {
   const insertObject: Record<string, unknown> = {
     name,
     artist_id: new ObjectId(artist_id),
-    key: musicPath,
+    path: musicPath,
     image_url,
     created_at: new Date(),
     updated_at: new Date(),
@@ -150,7 +150,11 @@ export async function editSongDetails(params: {
 
   let music = null;
   if (path)
-    music = await uploadFile(path, name.split(' ').join('_').toLowerCase());
+    music = await uploadFile(
+      path,
+      name.split(' ').join('_').toLowerCase(),
+      currentSongsDetails?.path
+    );
 
   if (!music) {
     return { status: 'error', message: 'Music not uploaded' };

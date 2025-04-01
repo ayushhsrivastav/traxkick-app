@@ -30,7 +30,6 @@ export class HomeComponent implements OnInit {
   }
 
   changeSong(songId: string) {
-    console.log('🚀 ~ HomeComponent ~ changeSong ~ songId:', songId);
     this.messageService.changeSongId(songId);
   }
 }

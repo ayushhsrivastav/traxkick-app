@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { albumsGateway, artistsGateway, musicGateway } from '../database';
+import { getSignedUrlForAudio } from './aws.service';
 
 export async function getInfo() {
   const singerDetails = await artistsGateway.find({
@@ -89,7 +90,7 @@ export async function getHomeInfo() {
         },
       },
       {
-        $sample: { size: 3 },
+        $sample: { size: 4 },
       },
       {
         $lookup: {
@@ -204,6 +205,49 @@ export async function getAlbumDetails(albumId: string) {
 
   if (Array.isArray(albumDetails) && albumDetails.length > 0) {
     return albumDetails[0];
+  }
+
+  return null;
+}
+
+export async function getMusicUrl(songId: string) {
+  const songDetails = (
+    await musicGateway.aggregate({
+      pipleline: [
+        {
+          $match: { _id: new ObjectId(songId) },
+        },
+        {
+          $lookup: {
+            from: 'side_stream_artists',
+            localField: 'artist_id',
+            foreignField: '_id',
+            as: 'artist',
+          },
+        },
+        {
+          $unwind: '$artist',
+        },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+            image_url: 1,
+            path: 1,
+            artist_name: '$artist.name',
+          },
+        },
+      ],
+    })
+  )[0];
+
+  if (songDetails?.path) {
+    return {
+      url: await getSignedUrlForAudio(songDetails.path),
+      image: songDetails.image_url,
+      name: songDetails.name,
+      artist: songDetails.artist_name,
+    };
   }
 
   return null;

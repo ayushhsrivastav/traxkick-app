@@ -1,34 +1,60 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, effect, signal } from '@angular/core';
 import { MessageService } from '../../shared/signals/message.service';
+import { ApiService } from '../../services/api.service';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-music-player',
   standalone: true,
-  imports: [],
+  imports: [SkeletonModule],
   templateUrl: './music-player.component.html',
   styleUrl: './music-player.component.scss',
 })
 export class MusicPlayerComponent implements OnInit {
   private messageService = inject(MessageService);
+  private readonly apiService = inject(ApiService);
+
   currentSongId = this.messageService.songId;
-  currentTime: number = 0;
-  duration: number = 240;
-  isPlaying: boolean = false;
-  currentVolume: number = 0;
-  isLiked: boolean = false;
-  audioElement: HTMLAudioElement | null = null;
+  currentTime = signal(0);
+  duration = signal(240);
+  isPlaying = signal(false);
+  currentVolume = signal(50);
+  isLiked = signal(false);
+  imageUrl = signal('');
+  name = signal('');
+  artist = signal('');
+  audioElement: HTMLAudioElement = new Audio();
+
+  constructor() {
+    effect(() => {
+      const songId = this.currentSongId();
+      this.changeSong(songId);
+    });
+  }
 
   ngOnInit() {
-    setInterval(() => {
-      if (this.isPlaying && this.currentTime < this.duration) {
-        this.currentTime++;
-      }
-      console.log('---->', this.currentSongId());
-    }, 1000);
+    this.audioElement.volume = this.currentVolume() / 100;
+
+    this.audioElement.addEventListener('timeupdate', () => {
+      this.currentTime.set(this.audioElement.currentTime);
+    });
+
+    this.audioElement.addEventListener('loadedmetadata', () => {
+      this.duration.set(this.audioElement.duration);
+    });
+
+    this.audioElement.addEventListener('ended', () => {
+      this.isPlaying.set(false);
+    });
   }
 
   togglePlay() {
-    this.isPlaying = !this.isPlaying;
+    if (this.isPlaying()) {
+      this.audioElement.pause();
+    } else {
+      this.audioElement.play();
+    }
+    this.isPlaying.set(!this.isPlaying());
   }
 
   formatTime(seconds: number): string {
@@ -41,35 +67,44 @@ export class MusicPlayerComponent implements OnInit {
     const progressBar = event.currentTarget as HTMLElement;
     const bounds = progressBar.getBoundingClientRect();
     const x = event.clientX - bounds.left;
-    const width = bounds.width;
-    const percentage = x / width;
-    this.currentTime = this.duration * percentage;
-
-    if (this.audioElement) {
-      this.audioElement.currentTime = this.currentTime;
-    }
+    const percentage = x / bounds.width;
+    this.audioElement.currentTime = this.duration() * percentage;
+    this.currentTime.set(this.audioElement.currentTime);
   }
 
   updateVolume(event: MouseEvent): void {
     const volumeBar = event.currentTarget as HTMLElement;
     const bounds = volumeBar.getBoundingClientRect();
     const x = event.clientX - bounds.left;
-    const width = bounds.width;
-    const percentage = x / width;
-    this.currentVolume = percentage * 100;
+    const percentage = x / bounds.width;
+    this.currentVolume.set(percentage * 100);
+    this.audioElement.volume = percentage;
   }
 
   getProgressStyle(): string {
-    if (this.duration === 0) return '0%';
-    return `${(this.currentTime / this.duration) * 100}%`;
+    if (this.duration() === 0) return '0%';
+    return `${(this.currentTime() / this.duration()) * 100}%`;
   }
 
   getVolumeStyle(): string {
-    if (this.currentVolume === 0) return '0%';
-    return `${(this.currentVolume / 100) * 100}%`;
+    return `${this.currentVolume()}%`;
   }
 
   changeSong(songId: string): void {
-    console.log(songId);
+    this.audioElement.src = '';
+    this.imageUrl.set('');
+    this.name.set('');
+    this.artist.set('');
+    this.apiService
+      .request('GET', `info/music/${songId}`, null)
+      .subscribe(res => {
+        this.audioElement.src = res.url;
+        this.imageUrl.set(res.image_url);
+        this.name.set(res.name);
+        this.artist.set(res.artist);
+        this.audioElement.load();
+        this.isPlaying.set(true);
+        this.audioElement.play();
+      });
   }
 }

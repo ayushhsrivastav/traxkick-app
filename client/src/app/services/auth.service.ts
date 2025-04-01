@@ -56,7 +56,13 @@ export class AuthService {
   }
 
   logout(): void {
-    this.cookieService.deleteAll();
-    window.location.href = '/login';
+    this.http
+      .get(`${this.serverUrl}/client/logout`, {
+        withCredentials: true,
+      })
+      .subscribe(() => {
+        this.cookieService.deleteAll();
+        window.location.href = '/login';
+      });
   }
 }
