@@ -12,69 +12,27 @@ export async function getInfo() {
     },
   });
 
-  const albumDetails = await albumsGateway.aggregate({
-    pipleline: [
-      {
-        $lookup: {
-          from: 'side_stream_artists',
-          localField: 'artist_id',
-          foreignField: '_id',
-          as: 'artist',
-        },
-      },
-      {
-        $unwind: '$artist',
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          image_url: 1,
-          artist_name: '$artist.name',
-          year: 1,
-          artist_id: 1,
-          copyright: 1,
-        },
-      },
-    ],
+  const albumDetails = await albumsGateway.find({
+    query: {},
+    projection: {
+      _id: 1,
+      name: 1,
+      image_url: 1,
+      year: 1,
+      artist_id: 1,
+      copyright: 1,
+    },
   });
 
-  const songDetails = await musicGateway.aggregate({
-    pipleline: [
-      {
-        $lookup: {
-          from: 'side_stream_artists',
-          localField: 'artist_id',
-          foreignField: '_id',
-          as: 'artist',
-        },
-      },
-      {
-        $unwind: '$artist',
-      },
-      {
-        $lookup: {
-          from: 'side_stream_albums',
-          localField: 'album_id',
-          foreignField: '_id',
-          as: 'album',
-        },
-      },
-      {
-        $unwind: '$album',
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          image_url: 1,
-          artist_name: '$artist.name',
-          album_name: '$album.name',
-          artist_id: 1,
-          album_id: 1,
-        },
-      },
-    ],
+  const songDetails = await musicGateway.find({
+    query: {},
+    projection: {
+      _id: 1,
+      name: 1,
+      image_url: 1,
+      artist_ids: 1,
+      album_id: 1,
+    },
   });
 
   return { singerDetails, albumDetails, songDetails };
@@ -114,26 +72,25 @@ export async function getHomeInfo() {
     ],
   });
 
-  const trendingSongs = await musicGateway.aggregate({
+  const songs = await musicGateway.aggregate({
     pipleline: [
+      { $sort: { updated_at: -1 } },
+      { $sample: { size: 5 } },
       {
-        $sort: {
-          updated_at: -1,
+        $lookup: {
+          from: 'side_stream_artists',
+          localField: 'artist_ids',
+          foreignField: '_id',
+          as: 'artists',
         },
-      },
-      {
-        $sample: { size: 5 },
       },
       {
         $lookup: {
           from: 'side_stream_artists',
-          localField: 'artist_id',
+          localField: 'featured_artist_ids',
           foreignField: '_id',
-          as: 'artist',
+          as: 'featured_artists',
         },
-      },
-      {
-        $unwind: '$artist',
       },
       {
         $lookup: {
@@ -143,22 +100,37 @@ export async function getHomeInfo() {
           as: 'album',
         },
       },
-      {
-        $unwind: '$album',
-      },
+      { $unwind: '$album' },
       {
         $project: {
-          _id: 1,
           name: 1,
           image_url: 1,
-          artist_name: '$artist.name',
           album_name: '$album.name',
+          artists: 1,
+          featured_artists: 1,
         },
       },
     ],
   });
 
-  return { featuredAlbums, trendingSongs };
+  const formattedSongs = songs.map(song => {
+    const artistNames = song.artists
+      .map((a: { name: string }) => a.name)
+      .join(', ');
+    const featuredNames = song.featured_artists
+      .map((a: { name: string }) => a.name)
+      .join(', ');
+    const artistLine = featuredNames
+      ? `${artistNames} ft. ${featuredNames}`
+      : artistNames;
+
+    return {
+      ...song,
+      artist_name: artistLine,
+    };
+  });
+
+  return { featuredAlbums, trendingSongs: formattedSongs };
 }
 
 export async function getAlbumDetails(albumId: string) {
@@ -220,13 +192,18 @@ export async function getMusicUrl(songId: string) {
         {
           $lookup: {
             from: 'side_stream_artists',
-            localField: 'artist_id',
+            localField: 'artist_ids',
             foreignField: '_id',
-            as: 'artist',
+            as: 'artists',
           },
         },
         {
-          $unwind: '$artist',
+          $lookup: {
+            from: 'side_stream_artists',
+            localField: 'featured_artist_ids',
+            foreignField: '_id',
+            as: 'featured_artists',
+          },
         },
         {
           $project: {
@@ -234,19 +211,29 @@ export async function getMusicUrl(songId: string) {
             name: 1,
             image_url: 1,
             path: 1,
-            artist_name: '$artist.name',
+            artists: 1,
+            featured_artists: 1,
           },
         },
       ],
     })
   )[0];
 
+  const artistNames = songDetails?.artists
+    .map((a: { name: string }) => a.name)
+    .join(', ');
+  const featuredNames = songDetails?.featured_artists
+    .map((a: { name: string }) => a.name)
+    .join(', ');
+
   if (songDetails?.path) {
     return {
       url: await getSignedUrlForAudio(songDetails.path),
       image: songDetails.image_url,
       name: songDetails.name,
-      artist: songDetails.artist_name,
+      artist: featuredNames
+        ? `${artistNames} ft. ${featuredNames}`
+        : artistNames,
     };
   }
 

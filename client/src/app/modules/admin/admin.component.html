@@ -33,7 +33,7 @@
                     placeholder="https://example.com/profile-image.jpg" required>
             </div>
 
-            <button type="submit" [disabled]="!singerForm.image_url || !singerForm.name">Submit</button>
+            <button type="submit">Submit</button>
         </form>
     </div>
     }
@@ -111,13 +111,9 @@
 
             <div class="form-group">
                 <label for="songSinger">Singer *</label>
-                <select id="songSinger" name="songSinger" [(ngModel)]="songForm.artist_id" required
-                    (change)="onSingerChangeInSong()">
-                    <option [ngValue]="null" disabled selected>Select singer</option>
-                    @for (singer of singers; track singer._id) {
-                    <option [ngValue]="singer._id">{{ singer.name }}</option>
-                    }
-                </select>
+                <p-multiselect [options]="singers" [(ngModel)]="songForm.artist_ids" optionLabel="name"
+                    optionValue="_id" placeholder="Select Singer(s)" [maxSelectedLabels]="3"
+                    styleClass="w-full md:w-200" (onPanelHide)="onSingerSelectionChange()" name="songSingers" />
             </div>
 
             <div class="form-group">
@@ -148,9 +144,47 @@
                 </div>
             </div>
 
-            <button type="submit"
-                [disabled]="!songForm.file || !songForm.name || !songForm.artist_id || !songForm.album_id || !songForm.image_url">Submit</button>
+            <button type="submit">Submit</button>
         </form>
     </div>
     }
+
+    <p-dialog header="Select Singer(s)" [(visible)]="visible" [style]="{ width: '35rem' }" [modal]="true">
+        <div class="singer-selection-dialog">
+            <div class="section">
+                <h3 class="section-title">Lead Singer(s)</h3>
+                <div class="singer-list">
+                    @for (artistId of songForm.artist_ids; track artistId) {
+                    @if(!featuredSingers.includes(artistId)) {
+                    <div class="singer-item">
+                        <p-checkbox [(ngModel)]="leadSingers" [value]="artistId" [inputId]="'lead-' + artistId"
+                            [name]="'lead-' + artistId" />
+                        <label [for]="'lead-' + artistId">{{ getSingerName(artistId) }}</label>
+                    </div>
+                    }
+                    }
+                </div>
+            </div>
+
+            <div class="section">
+                <h3 class="section-title">Featured Singer(s)</h3>
+                <div class="singer-list">
+                    @for (artistId of songForm.artist_ids; track artistId) {
+                    @if(!leadSingers.includes(artistId)) {
+                    <div class="singer-item">
+                        <p-checkbox [(ngModel)]="featuredSingers" [value]="artistId" [inputId]="'featured-' + artistId"
+                            [name]="'featured-' + artistId" />
+                        <label [for]="'featured-' + artistId">{{ getSingerName(artistId) }}</label>
+                    </div>
+                    }
+                    }
+                </div>
+            </div>
+
+            <div class="dialog-footer">
+                <p-button label="Cancel" severity="secondary" (click)="onCancelSingers()" />
+                <p-button label="Save" (click)="onSaveSingers()" />
+            </div>
+        </div>
+    </p-dialog>
 </div>

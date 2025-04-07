@@ -33,8 +33,9 @@ export interface Song {
   _id: string;
   name: string;
   image_url: string;
-  artist_id: string;
-  artist_name: string;
+  artist_ids: string[];
+  featured_artist_ids: string[];
+  artist_names: string[];
   album_id: string;
   album_name: string;
 }

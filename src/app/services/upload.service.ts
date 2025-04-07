@@ -5,21 +5,42 @@ import { isValidImageUrl } from './generic.service';
 
 export async function uploadSongDetails(params: {
   name: string;
-  artist_id: string;
+  lead_artist_ids: string[];
+  featured_artist_ids: string[];
   album_id: string | null;
   image_url: string;
   path: string;
 }): Promise<
   { status: 'success'; song_id: string } | { status: 'error'; message: string }
 > {
-  const { name, artist_id, album_id, image_url, path } = params;
+  const {
+    name,
+    lead_artist_ids,
+    featured_artist_ids,
+    album_id,
+    image_url,
+    path,
+  } = params;
 
-  if (
-    (await artistsGateway.findOne({
-      query: { _id: new ObjectId(artist_id) },
-    })) === null
-  ) {
+  const leadArtistIds = lead_artist_ids.map(id => new ObjectId(id));
+  const featuredArtistIds = featured_artist_ids?.map(id => new ObjectId(id));
+
+  const artistDetails = await artistsGateway.find({
+    query: { _id: { $in: leadArtistIds } },
+  });
+
+  if (artistDetails.length !== leadArtistIds.length) {
     return { status: 'error', message: 'Artist not found' };
+  }
+
+  if (featuredArtistIds) {
+    const featuredArtistDetails = await artistsGateway.find({
+      query: { _id: { $in: featuredArtistIds } },
+    });
+
+    if (featuredArtistDetails.length !== featuredArtistIds.length) {
+      return { status: 'error', message: 'Artist not found' };
+    }
   }
 
   if (!isValidImageUrl(image_url)) {
@@ -46,7 +67,8 @@ export async function uploadSongDetails(params: {
 
   const insertObject: Record<string, unknown> = {
     name,
-    artist_id: new ObjectId(artist_id),
+    artist_ids: leadArtistIds,
+    featured_artist_ids: featuredArtistIds || [],
     path: musicPath,
     image_url,
     created_at: new Date(),
@@ -74,11 +96,26 @@ export async function uploadSongDetails(params: {
       options: { returnDocument: 'after' },
     });
 
-  await artistsGateway.findOneAndUpdate({
-    query: { _id: new ObjectId(artist_id) },
-    update: { $push: updateDetails },
-    options: { returnDocument: 'after' },
-  });
+  for (const leadArtistId of leadArtistIds) {
+    await artistsGateway.findOneAndUpdate({
+      query: { _id: new ObjectId(leadArtistId) },
+      update: { $push: updateDetails },
+      options: { returnDocument: 'after' },
+    });
+  }
+
+  if (featuredArtistIds) {
+    const featuringArtistUpdateDetails: PushOperator<Document> = {
+      featured_song_list: insertedMusic,
+    };
+    for (const featuredArtistId of featuredArtistIds) {
+      await artistsGateway.findOneAndUpdate({
+        query: { _id: new ObjectId(featuredArtistId) },
+        update: { $push: featuringArtistUpdateDetails },
+        options: { returnDocument: 'after' },
+      });
+    }
+  }
 
   return { status: 'success', song_id: insertedMusic?.toString() };
 }
@@ -86,30 +123,56 @@ export async function uploadSongDetails(params: {
 export async function editSongDetails(params: {
   _id: string;
   name: string;
-  artist_id: string;
+  lead_artist_ids: string[];
+  featured_artist_ids: string[];
   album_id: string | null;
   image_url: string;
   path: string | null;
 }): Promise<{ status: 'success' } | { status: 'error'; message: string }> {
-  const { _id, name, artist_id, album_id, image_url, path } = params;
+  const {
+    _id,
+    name,
+    lead_artist_ids,
+    featured_artist_ids,
+    album_id,
+    image_url,
+    path,
+  } = params;
 
   const currentSongsDetails = await musicGateway.findOne({
     query: { _id: new ObjectId(_id) },
   });
 
-  if (
-    currentSongsDetails?.artist_id &&
-    currentSongsDetails?.artist_id?.toString() !== artist_id
-  ) {
-    const dataToPull = {
-      song_list: new ObjectId(_id),
-    } as PullOperator<Document>;
+  const leadArtistIds = lead_artist_ids.map(id => new ObjectId(id));
+  const featuredArtistIds = featured_artist_ids?.map(id => new ObjectId(id));
 
-    await artistsGateway.findOneAndUpdate({
-      query: { _id: currentSongsDetails?.artist_id },
-      update: { $pull: dataToPull },
-      options: { returnDocument: 'after' },
-    });
+  for (const leadArtistId of currentSongsDetails?.lead_artist_ids || []) {
+    if (!leadArtistIds.includes(leadArtistId)) {
+      const dataToPull = {
+        song_list: new ObjectId(_id),
+      } as PullOperator<Document>;
+
+      await artistsGateway.findOneAndUpdate({
+        query: { _id: new ObjectId(leadArtistId) },
+        update: { $pull: dataToPull },
+        options: { returnDocument: 'after' },
+      });
+    }
+  }
+
+  for (const featuredArtistId of currentSongsDetails?.featured_artist_ids ||
+    []) {
+    if (!featuredArtistIds.includes(featuredArtistId)) {
+      const dataToPull = {
+        song_list: new ObjectId(_id),
+      } as PullOperator<Document>;
+
+      await artistsGateway.findOneAndUpdate({
+        query: { _id: new ObjectId(featuredArtistId) },
+        update: { $pull: dataToPull },
+        options: { returnDocument: 'after' },
+      });
+    }
   }
 
   if (
@@ -127,12 +190,22 @@ export async function editSongDetails(params: {
     });
   }
 
-  if (
-    (await artistsGateway.findOne({
-      query: { _id: new ObjectId(artist_id) },
-    })) === null
-  ) {
+  const artistDetails = await artistsGateway.find({
+    query: { _id: { $in: leadArtistIds } },
+  });
+
+  if (artistDetails.length !== leadArtistIds.length) {
     return { status: 'error', message: 'Artist not found' };
+  }
+
+  if (featuredArtistIds) {
+    const featuredArtistDetails = await artistsGateway.find({
+      query: { _id: { $in: featuredArtistIds } },
+    });
+
+    if (featuredArtistDetails.length !== featuredArtistIds.length) {
+      return { status: 'error', message: 'Artist not found' };
+    }
   }
 
   if (!isValidImageUrl(image_url)) {
@@ -156,13 +229,10 @@ export async function editSongDetails(params: {
       currentSongsDetails?.path
     );
 
-  if (!music) {
-    return { status: 'error', message: 'Music not uploaded' };
-  }
-
   const updateDetailsMusic: Record<string, unknown> = {
     name,
-    artist_id: new ObjectId(artist_id),
+    artist_ids: lead_artist_ids,
+    featured_artist_ids: featuredArtistIds || [],
     image_url,
     created_at: new Date(),
     updated_at: new Date(),
@@ -196,12 +266,32 @@ export async function editSongDetails(params: {
       options: { returnDocument: 'after' },
     });
 
-  if (currentSongsDetails?.artist_id !== artist_id)
-    await artistsGateway.findOneAndUpdate({
-      query: { _id: new ObjectId(artist_id) },
-      update: { $push: updateDetails },
-      options: { returnDocument: 'after' },
-    });
+  for (const leadArtistId of leadArtistIds) {
+    if (!currentSongsDetails?.artist_ids.includes(leadArtistId)) {
+      await artistsGateway.findOneAndUpdate({
+        query: { _id: new ObjectId(leadArtistId) },
+        update: { $push: updateDetails },
+        options: { returnDocument: 'after' },
+      });
+    }
+  }
+
+  if (featuredArtistIds) {
+    const featuringArtistUpdateDetails: PushOperator<Document> = {
+      featured_song_list: insertedMusic,
+    };
+    for (const featuredArtistId of featuredArtistIds) {
+      if (
+        !currentSongsDetails?.featured_artist_ids.includes(featuredArtistId)
+      ) {
+        await artistsGateway.findOneAndUpdate({
+          query: { _id: new ObjectId(featuredArtistId) },
+          update: { $push: featuringArtistUpdateDetails },
+          options: { returnDocument: 'after' },
+        });
+      }
+    }
+  }
 
   return { status: 'success' };
 }

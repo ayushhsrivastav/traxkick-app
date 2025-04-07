@@ -376,3 +376,151 @@ input[type="file"] {
     padding: 20px 15px;
   }
 }
+
+/* PrimeNG Multiselect Custom Styles */
+:host ::ng-deep {
+  .p-multiselect {
+    width: 100%;
+    background-color: var(--sidestream-medium-grey);
+    border: 1px solid var(--sidestream-medium-grey);
+    border-radius: var(--input-radius);
+    min-height: 45px;
+    transition: all var(--transition-speed);
+    
+    &:not(.p-disabled):hover {
+      border-color: var(--sidestream-primary);
+    }
+    
+    &:not(.p-disabled).p-focus {
+      outline: none;
+      border-color: var(--sidestream-primary);
+      box-shadow: 0 0 0 2px rgba(221, 218, 200, 0.3);
+    }
+    
+    .p-multiselect-label {
+      padding: 12px 20px;
+      color: var(--sidestream-white);
+      font-size: 14px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 45px;
+      
+      &.p-placeholder {
+        color: var(--sidestream-light-grey);
+        width: 100%;
+        text-align: center;
+      }
+    }
+    
+    .p-multiselect-trigger {
+      color: var(--sidestream-light-grey);
+      width: 45px;
+      
+      &:hover {
+        color: var(--sidestream-white);
+      }
+    }
+  }
+  
+  .p-multiselect-panel {
+    background-color: var(--sidestream-dark-grey);
+    border: 1px solid var(--sidestream-medium-grey);
+    border-radius: var(--panel-radius);
+    box-shadow: none;
+    
+    .p-multiselect-items {
+      padding: 0.5rem;
+      
+      .p-multiselect-item {
+        margin: 0;
+        padding: 0.75rem 1rem;
+        color: var(--sidestream-white);
+        border-radius: var(--input-radius);
+        transition: all var(--transition-speed);
+        
+        &:hover {
+          background-color: var(--sidestream-medium-grey);
+        }
+        
+        &.p-highlight {
+          background-color: var(--sidestream-primary);
+          color: var(--sidestream-black);
+        }
+        
+        .p-checkbox {
+          margin-right: 0.5rem;
+          
+          .p-checkbox-box {
+            background-color: var(--sidestream-medium-grey);
+            border-color: var(--sidestream-light-grey);
+            border-radius: 4px;
+            
+            &.p-highlight {
+              background-color: var(--sidestream-primary);
+              border-color: var(--sidestream-primary);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Singer Selection Dialog Styles */
+.singer-selection-dialog {
+  padding: 1rem;
+  
+  .section {
+    margin-bottom: 1.5rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--sidestream-white);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--sidestream-medium-grey);
+    }
+    
+    .singer-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+      
+      .singer-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background-color: var(--sidestream-medium-grey);
+        border-radius: var(--input-radius);
+        transition: all var(--transition-speed);
+        
+        &:hover {
+          background-color: var(--sidestream-primary);
+          color: var(--sidestream-black);
+        }
+        
+        label {
+          cursor: pointer;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+  
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sidestream-medium-grey);
+  }
+}
