@@ -6,7 +6,7 @@ import { ApiService } from '../../services/api.service';
 import { AlbumDetails } from '../../interfaces/data.interface';
 import { LoadingService } from '../../services/loading.service';
 import { TimeFormatPipe } from '../../pipes/time-format.pipe';
-
+import { MessageService } from '../../shared/signals/message.service';
 @Component({
   selector: 'app-album',
   standalone: true,
@@ -18,6 +18,7 @@ export class AlbumComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private apiService = inject(ApiService);
   private readonly loadingService = inject(LoadingService);
+  private readonly messageService = inject(MessageService);
   private routeSubscription!: Subscription;
 
   album: AlbumDetails | null = null;
@@ -53,5 +54,9 @@ export class AlbumComponent implements OnInit {
 
   onMouseLeave() {
     this.currentSongIndex = null;
+  }
+
+  changeSong(songId: string) {
+    this.messageService.changeSongId(songId);
   }
 }

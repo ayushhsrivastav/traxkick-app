@@ -9,7 +9,7 @@
 
     <div class="songs-list">
         <div class="song-item" *ngFor="let song of album?.songs; let i = index" (mousemove)="onMouseMove($event, i)"
-            (mouseleave)="onMouseLeave()">
+            (click)="$event.stopPropagation(); changeSong(song._id)" (mouseleave)="onMouseLeave()">
             <div class="song-number">{{ i + 1 }}</div>
             <div class="song-details">
                 <span class="song-name">{{ song.name }}</span>
