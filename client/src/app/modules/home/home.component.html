@@ -1,1 +1,51 @@
-<p>home works!</p>
+<div class="home-container">
+    <div class="main-content">
+        <!-- Featured Section -->
+        <section class="featured-section">
+            <h1>Featured Collections</h1>
+            <div class="featured-grid">
+                @for(album of albums; track $index) {
+                <div class="album-card" routerLink="/album/{{ album._id }}">
+                    <div class="album-image">
+                        <img [src]="album.image_url" alt="{{ album.name }}">
+                        <div class="overlay">
+                            <div class="album-text">
+                                <h3>{{ album.name }}</h3>
+                                <p>{{ album.artist_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="album-name">{{ album.name }}</div>
+                </div>
+                }
+            </div>
+        </section>
+
+        <!-- Trending Section -->
+        <section class="trending-section">
+            <h2>Trending This Week</h2>
+            <div class="trending-grid">
+                @for(song of songs; track $index) {
+                <div class="song-card">
+                    <div class="song-image" [routerLink]="['/song', song._id]">
+                        <img [src]="song.image_url" alt="{{ song.name }}">
+                        <div class="overlay">
+                            <button class="play-button" (click)="$event.stopPropagation(); changeSong(song._id)">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <div class="song-text">
+                                <h4>{{ song.name }}</h4>
+                                <p>{{ song.artist_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="song-info" [routerLink]="['/song', song._id]">
+                        <h4>{{ song.name }}</h4>
+                        <p>{{ song.artist_name }}</p>
+                    </div>
+                </div>
+                }
+            </div>
+        </section>
+    </div>
+</div>

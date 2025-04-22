@@ -19,7 +19,6 @@ export default {
     reconnection: env.DATABASE_RECONNECTION === 'true',
   },
   jwt: {
-    secretKey: env.JWT_SECRET_KEY!,
     accessTokenSecret: env.ACCESS_TOKEN_SECRET!,
     refreshTokenSecret: env.REFRESH_TOKEN_SECRET!,
   },

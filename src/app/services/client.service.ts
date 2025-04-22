@@ -42,13 +42,14 @@ export async function signup(
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errorMessage = error.errors[0].message;
-      throw new BaseError(errorMessage as ErrorKeys, true, true);
+      throw new BaseError(errorMessage as ErrorKeys, true, true, error);
     } else {
       const newError = error as { error_message: ErrorKeys };
       throw new BaseError(
         newError?.error_message || 'UNKNOWN_EXCEPTION',
         true,
-        true
+        true,
+        error
       );
     }
   }
@@ -87,8 +88,15 @@ async function login(ctx: Context): Promise<{
     };
   }
 
-  const access_token = generateToken(userDetails.username);
-  const refresh_token = generateToken(userDetails.username, true);
+  const access_token = generateToken(
+    userDetails.username,
+    userDetails.is_admin
+  );
+  const refresh_token = generateToken(
+    userDetails.username,
+    userDetails.is_admin,
+    true
+  );
 
   return {
     status: 'success',

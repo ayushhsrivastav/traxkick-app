@@ -18,9 +18,18 @@
   
   .progress-bar, .volume-bar {
     cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    padding: 8px 0;
+    margin: -8px 0;
+    
     &:hover {
-      .bg-primary {
+      .progress-complete, .volume-complete {
         background-color: var(--primary-color);
+      }
+      .progress-handle, .volume-handle {
+        display: block;
       }
     }
   }
@@ -72,7 +81,6 @@
     padding: 0 16px;
 }
 
-// Track Info Section
 .track-info {
     flex: 1;
     min-width: 180px;
@@ -168,7 +176,6 @@
     }
 }
 
-// Playback Bar
 .playback-bar {
     width: 100%;
     display: flex;
@@ -188,42 +195,42 @@
         cursor: pointer;
 
         .progress-slider {
-            background-color: #4d4d4d;
-            height: 100%;
-            border-radius: 2px;
             position: relative;
+            height: 4px;
+            background-color: #4d4d4d;
+            border-radius: 2px;
+            overflow: visible;
 
-            &:hover {
-                .progress-complete {
-                    background-color: #1db954;
-                }
-                .progress-handle {
-                    display: block;
+            .progress-complete {
+                position: absolute;
+                height: 100%;
+                background-color: #fff;
+                border-radius: 2px;
+                transition: background-color 0.2s ease;
+            }
+
+            .progress-handle {
+                display: none;
+                position: absolute;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 12px;
+                height: 12px;
+                background-color: #fff;
+                border-radius: 50%;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                transition: transform 0.1s ease;
+                will-change: transform, left;
+                pointer-events: none;
+
+                &:hover {
+                    transform: translate(-50%, -50%) scale(1.1);
                 }
             }
-        }
-
-        .progress-complete {
-            background-color: #fff;
-            width: 30%;
-            height: 100%;
-            border-radius: 2px;
-        }
-
-        .progress-handle {
-            display: none;
-            position: absolute;
-            right: -6px;
-            top: -6px;
-            width: 12px;
-            height: 12px;
-            background-color: #fff;
-            border-radius: 50%;
         }
     }
 }
 
-// Volume Controls Section
 .volume-controls {
     flex: 1;
     min-width: 180px;
@@ -233,6 +240,27 @@
     justify-content: flex-end;
     gap: 8px;
 
+    .volume-btn {
+        width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .volume-icon-wrapper {
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        i {
+            font-size: 16px;
+            width: 16px;
+            text-align: center;
+        }
+    }
+
     .volume-bar {
         width: 93px;
         height: 4px;
@@ -240,42 +268,42 @@
         cursor: pointer;
 
         .volume-slider {
-            background-color: #4d4d4d;
-            height: 100%;
-            border-radius: 2px;
             position: relative;
+            height: 4px;
+            background-color: #4d4d4d;
+            border-radius: 2px;
+            overflow: visible;
 
-            &:hover {
-                .volume-complete {
-                    background-color: #1db954;
-                }
-                .volume-handle {
-                    display: block;
+            .volume-complete {
+                position: absolute;
+                height: 100%;
+                background-color: #fff;
+                border-radius: 2px;
+                transition: background-color 0.2s ease;
+            }
+
+            .volume-handle {
+                display: none;
+                position: absolute;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 12px;
+                height: 12px;
+                background-color: #fff;
+                border-radius: 50%;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                transition: transform 0.1s ease;
+                will-change: transform, left;
+                pointer-events: none;
+
+                &:hover {
+                    transform: translate(-50%, -50%) scale(1.1);
                 }
             }
-        }
-
-        .volume-complete {
-            background-color: #fff;
-            width: 50%;
-            height: 100%;
-            border-radius: 2px;
-        }
-
-        .volume-handle {
-            display: none;
-            position: absolute;
-            right: -6px;
-            top: -6px;
-            width: 12px;
-            height: 12px;
-            background-color: #fff;
-            border-radius: 50%;
         }
     }
 }
 
-// Common Button Styles
 .control-btn, .action-btn {
     background: none;
     border: none;
@@ -307,11 +335,34 @@
 .volume-slider {
     position: relative;
     height: 4px;
+    background-color: #4d4d4d;
+    border-radius: 2px;
+    overflow: visible;
 
-    &:hover {
-        .progress-handle,
-        .volume-handle {
-            display: block;
+    .progress-complete, .volume-complete {
+        position: absolute;
+        height: 100%;
+        background-color: #fff;
+        border-radius: 2px;
+        transition: background-color 0.2s ease;
+    }
+
+    .progress-handle, .volume-handle {
+        display: none;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        background-color: #fff;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: transform 0.1s ease;
+        will-change: transform, left;
+        pointer-events: none;
+
+        &:hover {
+            transform: translate(-50%, -50%) scale(1.1);
         }
     }
 }

@@ -1,0 +1,23 @@
+<div class="album-container">
+    <div class="album-header">
+        <img [src]="album?.image_url" alt="{{ album?.name }}" class="album-cover">
+        <div class="album-info">
+            <h1>{{ album?.name }}</h1>
+            <h2>{{ album?.artist_name }}</h2>
+        </div>
+    </div>
+
+    <div class="songs-list">
+        <div class="song-item" *ngFor="let song of album?.songs; let i = index" (mousemove)="onMouseMove($event, i)"
+            (click)="$event.stopPropagation(); changeSong(song._id)" (mouseleave)="onMouseLeave()">
+            <div class="song-number">{{ i + 1 }}</div>
+            <div class="song-details">
+                <span class="song-name">{{ song.name }}</span>
+                <span class="song-duration">{{ song.duration | timeFormat }}</span>
+            </div>
+            <button class="play-button" *ngIf="currentSongIndex === i" [style.left.px]="buttonPosition.x">
+                <i class="fas fa-play"></i>
+            </button>
+        </div>
+    </div>
+</div>

@@ -50,37 +50,24 @@ header {
     flex: 0 0 auto;
 
     .profile-container {
+        position: relative;
         cursor: pointer;
-        
-        .profile-image {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        
-        .profile-placeholder {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.2s ease;
-            
-            span {
-                color: #ffffff;
-                font-size: 14px;
-                font-weight: 700;
-                text-transform: uppercase;
-            }
-        }
+    }
 
-        &:hover {
-            .profile-placeholder {
-                opacity: 0.8;
-            }
-        }
+    .profile-image {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    .profile-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
     }
 }
 
@@ -154,5 +141,67 @@ header {
                 outline: none;
             }
         }
+    }
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background-color: #282828;
+    border-radius: 4px;
+    min-width: 160px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 12px 16px;
+    color: #ffffff;
+    text-decoration: none;
+    transition: background-color 0.2s;
+
+    &:first-child {
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+    }
+
+    &:last-child {
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+    &:hover {
+        background-color: #3e3e3e;
+        color: #1db954;
+    }
+}
+
+.profile-button {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+
+    &:hover {
+        background: transparent;
+    }
+
+    .profile-image {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    .profile-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
     }
 }

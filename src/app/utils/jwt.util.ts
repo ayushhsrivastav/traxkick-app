@@ -7,12 +7,13 @@ import { BaseError } from './error.util';
 
 export function generateToken(
   username: string,
+  is_admin: boolean = false,
   is_refresh_token: boolean = false
 ) {
   if (is_refresh_token)
-    return jwt.sign({ username }, config.jwt.refreshTokenSecret);
+    return jwt.sign({ username, is_admin }, config.jwt.refreshTokenSecret);
 
-  return jwt.sign({ username }, config.jwt.accessTokenSecret, {
+  return jwt.sign({ username, is_admin }, config.jwt.accessTokenSecret, {
     expiresIn: '15m',
   });
 }
@@ -27,13 +28,14 @@ export function verifyToken(token: string, is_refresh_token: boolean = false) {
     if (
       typeof payload === 'object' &&
       payload !== null &&
-      'username' in payload
+      'username' in payload &&
+      'is_admin' in payload
     ) {
       return payload;
     }
 
-    throw new BaseError('INVALID_TOKEN', true);
-  } catch {
-    throw new BaseError('INVALID_TOKEN', true);
+    throw new BaseError('INVALID_TOKEN', true, true, 'Unknown Error');
+  } catch (error) {
+    throw new BaseError('INVALID_TOKEN', true, true, error);
   }
 }

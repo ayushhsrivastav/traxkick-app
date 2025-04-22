@@ -1,4 +1,4 @@
-import { login, signup } from '../../controllers/client.controller';
+import { login, signup, logout } from '../../controllers/client.controller';
 import { RequestMethod, RouteModule } from '../route.interface';
 
 const routeModule: RouteModule = {
@@ -15,6 +15,11 @@ const routeModule: RouteModule = {
       method: RequestMethod.POST,
       endpoint: '/signup',
       action: signup,
+    },
+    {
+      method: RequestMethod.GET,
+      endpoint: '/logout',
+      action: logout,
     },
   ],
 };

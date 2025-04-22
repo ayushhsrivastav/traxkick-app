@@ -2,13 +2,26 @@
     <div class="player-content">
         <!-- Left: Track Info -->
         <div class="track-info">
-            <img src="assets/album-covers/instant_crush.png" alt="Album Cover" class="album-cover">
+            @if (imageUrl()) {
+            <img [src]="imageUrl()" alt="Album Cover" class="album-cover">
+            } @else {
+            <p-skeleton size="4rem" />
+            }
             <div class="track-details">
-                <h6 class="track-name">Instant Crush</h6>
-                <p class="artist-name">Daft Punk ft. Julian Casablancas</p>
+                @if (name() && artist()) {
+                <h6 class="track-name">{{ name() }}</h6>
+                <p class="artist-name">{{ artist() }}</p>
+                } @else {
+                <h6 class="track-name" style="padding-bottom: 0.1rem;">
+                    <p-skeleton height="1rem" width="5rem" styleClass="mb-2" />
+                </h6>
+                <p class="artist-name">
+                    <p-skeleton height="1rem" width="4rem" styleClass="mb-2" />
+                </p>
+                }
             </div>
-            <div class="track-actions" (click)="isLiked = !isLiked">
-                @if (isLiked) {
+            <div class="track-actions" (click)="isLiked.set(!isLiked())">
+                @if (isLiked()) {
                 <button class="action-btn">
                     <i class="fa-solid fa-heart"></i>
                 </button>
@@ -31,7 +44,7 @@
                     <i class="fa-solid fa-backward-step"></i>
                 </button>
                 <button class="play-pause-btn" (click)="togglePlay()">
-                    <i class="fa-solid" [class.fa-circle-play]="!isPlaying" [class.fa-circle-pause]="isPlaying"></i>
+                    <i class="fa-solid" [class.fa-circle-play]="!isPlaying()" [class.fa-circle-pause]="isPlaying()"></i>
                 </button>
                 <button class="control-btn">
                     <i class="fa-solid fa-forward-step"></i>
@@ -42,14 +55,15 @@
             </div>
 
             <div class="playback-bar">
-                <span class="time">{{ formatTime(currentTime) }}</span>
-                <div class="progress-bar" (click)="updateProgress($event)">
+                <span class="time">{{ formatTime(currentTime()) }}</span>
+                <div class="progress-bar" (mousedown)="startDrag($event, 'progress')"
+                    (click)="updateValue($event, 'progress')">
                     <div class="progress-slider">
                         <div class="progress-complete" [style.width]="getProgressStyle()"></div>
                         <div class="progress-handle" [style.left]="getProgressStyle()"></div>
                     </div>
                 </div>
-                <span class="time">{{ formatTime(duration) }}</span>
+                <span class="time">{{ formatTime(duration()) }}</span>
             </div>
         </div>
 
@@ -58,19 +72,22 @@
             <button class="control-btn">
                 <i class="fas fa-list"></i>
             </button>
-            <button class="control-btn volume-btn">
+            <button class="control-btn volume-btn" (click)="toggleMute()">
                 <span class="volume-icon-wrapper">
-                    @if (currentVolume > 50) {
+                    @if (isMuted()) {
+                    <i class="fas fa-volume-xmark"></i>
+                    } @else if (currentVolume() > 50) {
                     <i class="fas fa-volume-high"></i>
-                    } @else if (currentVolume <= 50 && currentVolume> 0) {
+                    } @else if (currentVolume() <= 50 && currentVolume()> 0) {
                         <i class="fas fa-volume-low"></i>
-                        } @else if (currentVolume == 0) {
+                        } @else if (currentVolume() == 0) {
                         <i class="fas fa-volume-xmark"></i>
                         }
                 </span>
             </button>
             <div class="volume-bar">
-                <div class="volume-slider" (click)="updateVolume($event)">
+                <div class="volume-slider" (mousedown)="startDrag($event, 'volume')"
+                    (click)="updateValue($event, 'volume')">
                     <div class="volume-complete" [style.width]="getVolumeStyle()"></div>
                     <div class="volume-handle" [style.left]="getVolumeStyle()"></div>
                 </div>

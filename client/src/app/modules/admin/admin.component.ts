@@ -8,14 +8,26 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
-import { Album, Singer, Song } from '../../interfaces/api.interface';
+import { Album, Singer, Song } from '../../interfaces/data.interface';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { DialogModule } from 'primeng/dialog';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToastModule, AvatarModule, ButtonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ToastModule,
+    AvatarModule,
+    ButtonModule,
+    MultiSelectModule,
+    DialogModule,
+    CheckboxModule,
+  ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
 })
@@ -28,9 +40,13 @@ export class AdminComponent implements OnInit {
 
   activeTab: 'singer' | 'album' | 'song' = 'singer';
 
+  visible: boolean = false;
+
   selectedSingerId: string | null = null;
   selectedAlbumId: string | null = null;
   selectedSongId: string | null = null;
+  leadSingers: string[] = [];
+  featuredSingers: string[] = [];
 
   currentYear: number = new Date().getFullYear();
 
@@ -63,13 +79,13 @@ export class AdminComponent implements OnInit {
 
   songForm: {
     name: string;
-    artist_id: string | null;
+    artist_ids: string[];
     album_id: string | null;
     image_url: string;
     file: File | null;
   } = {
     name: '',
-    artist_id: null,
+    artist_ids: [],
     album_id: null,
     image_url: '',
     file: null,
@@ -140,7 +156,7 @@ export class AdminComponent implements OnInit {
 
     this.songForm = {
       name: '',
-      artist_id: null,
+      artist_ids: [],
       album_id: null,
       image_url: '',
       file: null,
@@ -189,16 +205,71 @@ export class AdminComponent implements OnInit {
       return;
     }
     this.songForm.name = song.name;
-    this.songForm.artist_id = song.artist_id;
+    this.songForm.artist_ids = song.artist_ids;
+    if (song.featured_artist_ids) {
+      this.songForm.artist_ids = this.songForm.artist_ids.concat(
+        song.featured_artist_ids
+      );
+    }
+    this.leadSingers = song.artist_ids || [];
+    this.featuredSingers = song.featured_artist_ids || [];
     this.songForm.album_id = song.album_id;
     this.songForm.image_url = song.image_url;
     this.onSingerChangeInSong();
   }
 
   onSingerChangeInSong(): void {
-    this.selectedSingerAlbums = this.albums.filter(
-      album => album.artist_id === this.songForm.artist_id
+    this.selectedSingerAlbums = this.albums.filter(album =>
+      album.artist_id.includes(this.songForm.artist_ids[0])
     );
+  }
+
+  onSingerSelectionChange(): void {
+    if (this.songForm.artist_ids.length === 1) {
+      this.leadSingers = this.songForm.artist_ids;
+    } else if (this.songForm.artist_ids.length > 1) {
+      this.visible = true;
+    }
+    if (this.leadSingers.length > 0) {
+      this.selectedSingerAlbums = this.albums.filter(album =>
+        this.leadSingers.some(singerId => album.artist_id.includes(singerId))
+      );
+    } else {
+      this.selectedSingerAlbums = [];
+      this.songForm.album_id = null;
+    }
+  }
+
+  getSingerName(artistId: string): string {
+    return this.singers.find(singer => singer._id === artistId)?.name || '';
+  }
+
+  onSaveSingers(): void {
+    if (
+      this.leadSingers.length + this.featuredSingers.length !==
+      this.songForm.artist_ids.length
+    ) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please select all singers',
+      });
+      return;
+    } else if (this.leadSingers.length === 0) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please select at least one lead singer',
+      });
+      return;
+    }
+    this.onSingerSelectionChange();
+    this.visible = false;
+  }
+
+  onCancelSingers(): void {
+    this.visible = false;
+    this.songForm.artist_ids = [];
   }
 
   submitSingerForm(): void {
@@ -385,7 +456,8 @@ export class AdminComponent implements OnInit {
     if (
       !this.songForm.name ||
       !this.songForm.image_url ||
-      !this.songForm.artist_id ||
+      this.songForm.artist_ids.length === 0 ||
+      this.leadSingers.length === 0 ||
       !this.songForm.album_id
     ) {
       this.messageService.add({
@@ -396,12 +468,15 @@ export class AdminComponent implements OnInit {
       return;
     }
 
-    const { name, image_url, artist_id, album_id } = this.songForm;
+    const { name, image_url, album_id } = this.songForm;
 
     const formData = new FormData();
     formData.append('name', name);
     formData.append('image_url', image_url);
-    formData.append('artist_id', artist_id);
+    this.leadSingers.forEach(id => formData.append('lead_artist_ids[]', id));
+    this.featuredSingers.forEach(id =>
+      formData.append('featured_artist_ids[]', id)
+    );
     if (album_id) formData.append('album_id', album_id);
     if (this.songForm.file) formData.append('file', this.songForm.file);
 

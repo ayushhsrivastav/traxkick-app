@@ -2,7 +2,8 @@ import { Context } from 'koa';
 import * as uploadService from '../services/upload.service';
 
 export async function uploadMusic(ctx: Context) {
-  const { name, artist_id, album_id, image_url } = ctx.request.body;
+  const { name, lead_artist_ids, featured_artist_ids, album_id, image_url } =
+    ctx.request.body;
   const music = ctx.request.files?.file;
 
   if (!music) {
@@ -17,7 +18,7 @@ export async function uploadMusic(ctx: Context) {
     return;
   }
 
-  if (!artist_id) {
+  if (!lead_artist_ids) {
     ctx.status = 400;
     ctx.body = { status: 'error', message: 'Artist ID not provided in body' };
     return;
@@ -34,7 +35,8 @@ export async function uploadMusic(ctx: Context) {
 
   const result = await uploadService.uploadSongDetails({
     name,
-    artist_id,
+    lead_artist_ids,
+    featured_artist_ids,
     album_id,
     image_url,
     path: filePath,
@@ -54,18 +56,19 @@ export async function uploadMusic(ctx: Context) {
 }
 
 export async function editMusic(ctx: Context) {
-  const { _id, name, artist_id, album_id, image_url } = ctx.request.body;
+  const {
+    _id,
+    name,
+    lead_artist_ids,
+    featured_artist_ids,
+    album_id,
+    image_url,
+  } = ctx.request.body;
   const music = ctx.request.files?.file;
 
   if (!_id) {
     ctx.status = 400;
     ctx.body = { status: 'error', message: '_id not provieded in body' };
-  }
-
-  if (!music) {
-    ctx.status = 400;
-    ctx.body = { status: 'error', message: 'No file uploaded' };
-    return;
   }
 
   if (!name) {
@@ -74,7 +77,7 @@ export async function editMusic(ctx: Context) {
     return;
   }
 
-  if (!artist_id) {
+  if (!lead_artist_ids) {
     ctx.status = 400;
     ctx.body = { status: 'error', message: 'Artist ID not provided in body' };
     return;
@@ -96,7 +99,8 @@ export async function editMusic(ctx: Context) {
   const result = await uploadService.editSongDetails({
     _id,
     name,
-    artist_id,
+    lead_artist_ids,
+    featured_artist_ids,
     album_id,
     image_url,
     path: filePath,
