@@ -56,7 +56,8 @@
 
             <div class="playback-bar">
                 <span class="time">{{ formatTime(currentTime()) }}</span>
-                <div class="progress-bar" (click)="updateProgress($event)">
+                <div class="progress-bar" (mousedown)="startDrag($event, 'progress')"
+                    (click)="updateValue($event, 'progress')">
                     <div class="progress-slider">
                         <div class="progress-complete" [style.width]="getProgressStyle()"></div>
                         <div class="progress-handle" [style.left]="getProgressStyle()"></div>
@@ -71,9 +72,11 @@
             <button class="control-btn">
                 <i class="fas fa-list"></i>
             </button>
-            <button class="control-btn volume-btn">
+            <button class="control-btn volume-btn" (click)="toggleMute()">
                 <span class="volume-icon-wrapper">
-                    @if (currentVolume() > 50) {
+                    @if (isMuted()) {
+                    <i class="fas fa-volume-xmark"></i>
+                    } @else if (currentVolume() > 50) {
                     <i class="fas fa-volume-high"></i>
                     } @else if (currentVolume() <= 50 && currentVolume()> 0) {
                         <i class="fas fa-volume-low"></i>
@@ -83,7 +86,8 @@
                 </span>
             </button>
             <div class="volume-bar">
-                <div class="volume-slider" (click)="updateVolume($event)">
+                <div class="volume-slider" (mousedown)="startDrag($event, 'volume')"
+                    (click)="updateValue($event, 'volume')">
                     <div class="volume-complete" [style.width]="getVolumeStyle()"></div>
                     <div class="volume-handle" [style.left]="getVolumeStyle()"></div>
                 </div>

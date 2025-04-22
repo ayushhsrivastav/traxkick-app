@@ -1,7 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthGuard } from '../../guards/auth.guard';
 import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-top-bar',
   standalone: true,
@@ -9,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './top-bar.component.html',
   styleUrl: './top-bar.component.scss',
 })
-export class TopBarComponent implements OnInit {
+export class TopBarComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   readonly authGuard = inject(AuthGuard);
   protected readonly authService = inject(AuthService);
@@ -44,6 +45,20 @@ export class TopBarComponent implements OnInit {
     this.authGuard.isAdmin().subscribe(res => {
       this.isAdmin = res;
     });
+  }
+
+  ngOnDestroy(): void {
+    // Clean up any subscriptions if needed
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const profileContainer = document.querySelector('.profile-container');
+    
+    if (profileContainer && !profileContainer.contains(target)) {
+      this.isDropdownOpen = false;
+    }
   }
 
   getFirstLetter(): string {
