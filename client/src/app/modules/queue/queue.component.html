@@ -1,0 +1,20 @@
+<div class="queue-container" *ngIf="isVisible()" (mouseleave)="hideQueue()">
+    <div class="queue-list" cdkDropList (cdkDropListDropped)="onDrop($event)">
+        <div class="queue-item" *ngFor="let song of musicQueue; let i = index" cdkDrag>
+            <div class="song-number">{{ i + 1 }}</div>
+
+            <img [src]="song.image_url" [alt]="song.name" class="song-image">
+
+            <div class="song-info">
+                <h4 class="song-name" [class.playing]="song.queue_id === currentQueueId">
+                    {{ song.name }}
+                </h4>
+                <p class="artist-name">{{ song.artist }}</p>
+            </div>
+
+            <div class="drag-indicator">
+                <i class="fas fa-grip-vertical"></i>
+            </div>
+        </div>
+    </div>
+</div>

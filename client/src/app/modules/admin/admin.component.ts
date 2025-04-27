@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LoadingService } from '../../services/loading.service';
@@ -31,7 +31,7 @@ import { CheckboxModule } from 'primeng/checkbox';
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements AfterViewInit {
   private loadingService = inject(LoadingService);
   private apiService = inject(ApiService);
   private messageService = inject(MessageService);
@@ -91,7 +91,7 @@ export class AdminComponent implements OnInit {
     file: null,
   };
 
-  async ngOnInit(): Promise<void> {
+  async ngAfterViewInit(): Promise<void> {
     this.loadingService.show();
     this.authService.checkAdminUser().subscribe({
       next: (res: any) => {

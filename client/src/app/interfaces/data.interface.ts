@@ -54,3 +54,12 @@ export interface AlbumDetails {
     duration: number;
   }[];
 }
+
+export interface SongDetails {
+  _id: string;
+  queue_id: string;
+  name: string;
+  image_url: string;
+  url: string;
+  artist: string;
+}

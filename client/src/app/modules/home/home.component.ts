@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { LoadingService } from '../../services/loading.service';
 import { RouterModule } from '@angular/router';
 import { HomeAlbums, HomeSongs } from '../../interfaces/data.interface';
@@ -12,7 +12,7 @@ import { MessageService } from '../../shared/signals/message.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements AfterViewInit {
   albums: HomeAlbums[] = [];
   songs: HomeSongs[] = [];
 
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   private readonly apiService = inject(ApiService);
   private readonly messageService = inject(MessageService);
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.loadingService.show();
     this.apiService.request('GET', 'info/home-info', null).subscribe(res => {
       this.loadingService.hide();

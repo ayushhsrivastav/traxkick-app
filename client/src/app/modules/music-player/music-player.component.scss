@@ -35,7 +35,7 @@
   }
   
   i {
-    color: #ffffff;
+    color: inherit;
   }
   
   .text-muted-foreground {
@@ -155,6 +155,17 @@
             &:hover {
                 color: #ffffff;
                 transform: scale(1.1);
+            }
+
+            &:disabled {
+                color: #4d4d4d;
+                cursor: not-allowed;
+                transform: none;
+                
+                &:hover {
+                    color: #4d4d4d;
+                    transform: none;
+                }
             }
         }
 

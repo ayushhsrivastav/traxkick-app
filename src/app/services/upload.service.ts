@@ -1,7 +1,9 @@
 import { ObjectId, PullOperator, PushOperator } from 'mongodb';
+import { parseFile } from 'music-metadata';
 import { albumsGateway, artistsGateway, musicGateway } from '../database';
 import { uploadFile } from './aws.service';
 import { isValidImageUrl } from './generic.service';
+import { unlink } from 'fs/promises';
 
 export async function uploadSongDetails(params: {
   name: string;
@@ -70,10 +72,13 @@ export async function uploadSongDetails(params: {
     artist_ids: leadArtistIds,
     featured_artist_ids: featuredArtistIds || [],
     path: musicPath,
+    duration: await parseFile(path).then(metadata => metadata.format.duration),
     image_url,
     created_at: new Date(),
     updated_at: new Date(),
   };
+
+  await unlink(path);
 
   if (album_id) insertObject.album_id = new ObjectId(album_id);
 
@@ -237,6 +242,13 @@ export async function editSongDetails(params: {
     created_at: new Date(),
     updated_at: new Date(),
   };
+
+  if (path) {
+    updateDetailsMusic.duration = await parseFile(path).then(
+      metadata => metadata.format.duration
+    );
+    await unlink(path);
+  }
 
   const unsetDetails: Record<string, unknown> = {};
 

@@ -1,25 +1,31 @@
 import {
   Component,
   inject,
-  OnInit,
+  AfterViewInit,
   effect,
   signal,
   OnDestroy,
+  ViewChild,
 } from '@angular/core';
+import { v4 as uuidv4 } from 'uuid';
 import { MessageService } from '../../shared/signals/message.service';
 import { ApiService } from '../../services/api.service';
 import { SkeletonModule } from 'primeng/skeleton';
+import { SongDetails } from '../../interfaces/data.interface';
+import { QueueComponent } from '../queue/queue.component';
 
 @Component({
   selector: 'app-music-player',
   standalone: true,
-  imports: [SkeletonModule],
+  imports: [SkeletonModule, QueueComponent],
   templateUrl: './music-player.component.html',
   styleUrl: './music-player.component.scss',
 })
-export class MusicPlayerComponent implements OnInit, OnDestroy {
+export class MusicPlayerComponent implements AfterViewInit, OnDestroy {
   private messageService = inject(MessageService);
   private readonly apiService = inject(ApiService);
+
+  @ViewChild(QueueComponent) queueComponent: QueueComponent | undefined;
 
   currentSongId = this.messageService.songId;
   currentTime = signal(0);
@@ -35,15 +41,18 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
   activeSlider: 'progress' | 'volume' | null = null;
   private previousVolume = 50;
   isMuted = signal(false);
+  musicQueue: SongDetails[] = [];
+  currentQueueId = '';
+  private hideQueueTimeout: number | undefined;
 
   constructor() {
     effect(() => {
       const songId = this.currentSongId();
-      this.changeSong(songId);
+      this.addToQueue(songId);
     });
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.audioElement.volume = this.currentVolume() / 100;
 
     this.audioElement.addEventListener('timeupdate', () => {
@@ -56,6 +65,7 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
 
     this.audioElement.addEventListener('ended', () => {
       this.isPlaying.set(false);
+      this.onMusicEnd();
     });
 
     document.addEventListener('mousemove', this.onMouseMove.bind(this));
@@ -176,21 +186,71 @@ export class MusicPlayerComponent implements OnInit, OnDestroy {
     return `${this.currentVolume()}%`;
   }
 
-  changeSong(songId: string): void {
-    this.audioElement.src = '';
-    this.imageUrl.set('');
-    this.name.set('');
-    this.artist.set('');
+  addToQueue(songId: string): void {
+    if (this.musicQueue.length > 0 && this.musicQueue[0]._id === songId) return;
     this.apiService
       .request('GET', `info/music/${songId}`, null)
       .subscribe(res => {
-        this.audioElement.src = res.url;
-        this.imageUrl.set(res.image_url);
-        this.name.set(res.name);
-        this.artist.set(res.artist);
-        this.audioElement.load();
-        this.isPlaying.set(true);
-        this.audioElement.play();
+        this.musicQueue.push({ ...res, queue_id: uuidv4() });
+        if (!this.isPlaying()) {
+          this.changeSong(this.musicQueue[0]);
+        }
       });
+  }
+
+  changeSong(songDetails: SongDetails, bypass = false): void {
+    if (!this.isPlaying() || bypass) {
+      this.audioElement.src = songDetails.url;
+      this.imageUrl.set(songDetails.image_url);
+      this.name.set(songDetails.name);
+      this.artist.set(songDetails.artist);
+      this.audioElement.load();
+      this.isPlaying.set(true);
+      this.audioElement.play();
+      this.currentQueueId = songDetails.queue_id;
+    }
+  }
+
+  onMusicEnd() {
+    if (this.musicQueue.length > 0) {
+      const currentIndex = this.getCurrentSongIndex();
+      this.changeSong(this.musicQueue[currentIndex + 1]);
+    }
+  }
+
+  showQueue() {
+    if (this.hideQueueTimeout) {
+      clearTimeout(this.hideQueueTimeout);
+    }
+    this.queueComponent?.showQueue();
+  }
+
+  hideQueue() {
+    this.hideQueueTimeout = window.setTimeout(() => {
+      const queueIcon = document.querySelector('.queue-icon');
+      const queueModal = document.querySelector('.queue-container');
+
+      if (!queueModal?.matches(':hover') && !queueIcon?.matches(':hover')) {
+        this.queueComponent?.hideQueue();
+      }
+    }, 100); // Small delay to allow mouse to reach the modal
+  }
+
+  getCurrentSongIndex() {
+    return this.musicQueue.findIndex(
+      song => song.queue_id === this.currentQueueId
+    );
+  }
+
+  navigateTrack(direction: 'prev' | 'next') {
+    const currentIndex = this.getCurrentSongIndex();
+    if (direction === 'prev' && currentIndex > 0) {
+      this.changeSong(this.musicQueue[currentIndex - 1], true);
+    } else if (
+      direction === 'next' &&
+      currentIndex < this.musicQueue.length - 1
+    ) {
+      this.changeSong(this.musicQueue[currentIndex + 1], true);
+    }
   }
 }
