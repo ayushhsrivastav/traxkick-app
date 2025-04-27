@@ -5,7 +5,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import config from '../../config/config';
-import { readFile, unlink } from 'fs/promises';
+import { readFile } from 'fs/promises';
 import { reportError } from '../errors/report-error.error';
 import { BaseError } from '../utils/error.util';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -36,8 +36,6 @@ export async function uploadFile(
     };
 
     await s3.send(new PutObjectCommand(params));
-
-    await unlink(filePath);
 
     return key;
   } catch (error) {

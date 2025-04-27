@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import { MessageService } from '../../shared/signals/message.service';
   templateUrl: './album.component.html',
   styleUrl: './album.component.scss',
 })
-export class AlbumComponent implements OnInit {
+export class AlbumComponent implements AfterViewInit {
   private route = inject(ActivatedRoute);
   private apiService = inject(ApiService);
   private readonly loadingService = inject(LoadingService);
@@ -26,7 +26,7 @@ export class AlbumComponent implements OnInit {
   currentSongIndex: number | null = null;
   buttonPosition = { x: 0 };
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.loadingService.show();
     this.routeSubscription = this.route.params.subscribe(params => {
       this.apiService

@@ -228,6 +228,7 @@ export async function getMusicUrl(songId: string) {
 
   if (songDetails?.path) {
     return {
+      _id: songDetails._id,
       url: await getSignedUrlForAudio(songDetails.path),
       image: songDetails.image_url,
       name: songDetails.name,

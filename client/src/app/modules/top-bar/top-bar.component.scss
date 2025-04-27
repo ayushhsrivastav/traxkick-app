@@ -30,10 +30,17 @@ header {
     flex: 0 0 auto;
 
     .logo-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
         img {
-            height: 32px;
+            max-height: 32px;
+            max-width: 120px;
             width: auto;
+            height: auto;
             object-fit: contain;
+            display: block;
         }
     }
 

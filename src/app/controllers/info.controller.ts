@@ -40,6 +40,7 @@ export async function musicUrl(ctx: Context) {
     image_url: musicUrl?.image,
     name: musicUrl?.name,
     artist: musicUrl?.artist,
+    _id: musicUrl?._id,
   };
   return;
 }

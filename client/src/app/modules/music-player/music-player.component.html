@@ -40,14 +40,14 @@
                 <button class="control-btn">
                     <i class="fa-solid fa-shuffle"></i>
                 </button>
-                <button class="control-btn">
-                    <i class="fa-solid fa-backward-step"></i>
+                <button class="control-btn" [disabled]="getCurrentSongIndex() === 0">
+                    <i class="fa-solid fa-backward-step" (click)="navigateTrack('prev')"></i>
                 </button>
                 <button class="play-pause-btn" (click)="togglePlay()">
                     <i class="fa-solid" [class.fa-circle-play]="!isPlaying()" [class.fa-circle-pause]="isPlaying()"></i>
                 </button>
-                <button class="control-btn">
-                    <i class="fa-solid fa-forward-step"></i>
+                <button class="control-btn" [disabled]="getCurrentSongIndex() === musicQueue.length - 1">
+                    <i class="fa-solid fa-forward-step" (click)="navigateTrack('next')"></i>
                 </button>
                 <button class="control-btn">
                     <i class="fa-solid fa-repeat"></i>
@@ -69,7 +69,7 @@
 
         <!-- Right: Volume Controls -->
         <div class="volume-controls">
-            <button class="control-btn">
+            <button class="control-btn queue-icon" (mouseenter)="showQueue()" (mouseleave)="hideQueue()">
                 <i class="fas fa-list"></i>
             </button>
             <button class="control-btn volume-btn" (click)="toggleMute()">
@@ -95,3 +95,5 @@
         </div>
     </div>
 </div>
+
+<app-queue [(musicQueue)]="musicQueue" [currentQueueId]="currentQueueId"></app-queue>
