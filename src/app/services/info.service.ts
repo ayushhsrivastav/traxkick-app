@@ -52,7 +52,7 @@ export async function getHomeInfo() {
       },
       {
         $lookup: {
-          from: 'side_stream_artists',
+          from: 'tracxkick_artists',
           localField: 'artist_id',
           foreignField: '_id',
           as: 'artist',
@@ -78,7 +78,7 @@ export async function getHomeInfo() {
       { $sample: { size: 5 } },
       {
         $lookup: {
-          from: 'side_stream_artists',
+          from: 'tracxkick_artists',
           localField: 'artist_ids',
           foreignField: '_id',
           as: 'artists',
@@ -86,7 +86,7 @@ export async function getHomeInfo() {
       },
       {
         $lookup: {
-          from: 'side_stream_artists',
+          from: 'tracxkick_artists',
           localField: 'featured_artist_ids',
           foreignField: '_id',
           as: 'featured_artists',
@@ -94,7 +94,7 @@ export async function getHomeInfo() {
       },
       {
         $lookup: {
-          from: 'side_stream_albums',
+          from: 'tracxkick_albums',
           localField: 'album_id',
           foreignField: '_id',
           as: 'album',
@@ -141,7 +141,7 @@ export async function getAlbumDetails(albumId: string) {
       },
       {
         $lookup: {
-          from: 'side_stream_artists',
+          from: 'tracxkick_artists',
           localField: 'artist_id',
           foreignField: '_id',
           as: 'artist',
@@ -152,7 +152,7 @@ export async function getAlbumDetails(albumId: string) {
       },
       {
         $lookup: {
-          from: 'side_stream_music',
+          from: 'tracxkick_music',
           localField: '_id',
           foreignField: 'album_id',
           as: 'songs',
@@ -191,7 +191,7 @@ export async function getMusicUrl(songId: string) {
         },
         {
           $lookup: {
-            from: 'side_stream_artists',
+            from: 'tracxkick_artists',
             localField: 'artist_ids',
             foreignField: '_id',
             as: 'artists',
@@ -199,7 +199,7 @@ export async function getMusicUrl(songId: string) {
         },
         {
           $lookup: {
-            from: 'side_stream_artists',
+            from: 'tracxkick_artists',
             localField: 'featured_artist_ids',
             foreignField: '_id',
             as: 'featured_artists',

@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
 :host {
-  --sidestream-primary: #DDDAC8;
-  --sidestream-black: #121212;
-  --sidestream-dark-grey: #181818;
-  --sidestream-medium-grey: #282828;
-  --sidestream-light-grey: #B3B3B3;
-  --sidestream-white: #FFFFFF;
+  --tracxkick-primary: #DDDAC8;
+  --tracxkick-black: #121212;
+  --tracxkick-dark-grey: #181818;
+  --tracxkick-medium-grey: #282828;
+  --tracxkick-light-grey: #B3B3B3;
+  --tracxkick-white: #FFFFFF;
   --panel-radius: 8px;
   --input-radius: 25px;
   --transition-speed: 0.3s;
@@ -17,8 +17,8 @@
   max-width: 950px;
   margin: 0 auto;
   padding: 30px;
-  background-color: var(--sidestream-black);
-  color: var(--sidestream-white);
+  background-color: var(--tracxkick-black);
+  color: var(--tracxkick-white);
   min-height: 100vh;
   text-align: center;
   
@@ -26,7 +26,7 @@
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 25px;
-    border-bottom: 1px solid var(--sidestream-medium-grey);
+    border-bottom: 1px solid var(--tracxkick-medium-grey);
     padding-bottom: 15px;
     text-align: center;
   }
@@ -36,7 +36,7 @@
   display: flex;
   margin-bottom: 30px;
   justify-content: center;
-  background-color: var(--sidestream-dark-grey);
+  background-color: var(--tracxkick-dark-grey);
   border-radius: 30px;
   padding: 5px;
   max-width: 400px;
@@ -47,7 +47,7 @@
     flex: 1;
     background: transparent;
     border: none;
-    color: var(--sidestream-light-grey);
+    color: var(--tracxkick-light-grey);
     padding: 10px 15px;
     font-size: 14px;
     font-weight: 600;
@@ -57,12 +57,12 @@
     text-align: center;
     
     &:hover {
-      color: var(--sidestream-white);
+      color: var(--tracxkick-white);
     }
     
     &.active {
-      background-color: var(--sidestream-primary);
-      color: var(--sidestream-black);
+      background-color: var(--tracxkick-primary);
+      color: var(--tracxkick-black);
       
       &:hover {
         filter: brightness(0.9);
@@ -72,7 +72,7 @@
 }
 
 .form-container {
-  background-color: var(--sidestream-dark-grey);
+  background-color: var(--tracxkick-dark-grey);
   border-radius: var(--panel-radius);
   padding: 25px;
   margin-bottom: 30px;
@@ -88,7 +88,7 @@
     margin-bottom: 8px;
     font-weight: 500;
     font-size: 14px;
-    color: var(--sidestream-white);
+    color: var(--tracxkick-white);
     text-align: center;
   }
   
@@ -97,9 +97,9 @@
     max-width: 400px;
     padding: 12px 15px;
     border-radius: var(--input-radius);
-    background-color: var(--sidestream-medium-grey);
-    border: 1px solid var(--sidestream-medium-grey);
-    color: var(--sidestream-white);
+    background-color: var(--tracxkick-medium-grey);
+    border: 1px solid var(--tracxkick-medium-grey);
+    color: var(--tracxkick-white);
     font-size: 14px;
     appearance: none;
     -webkit-appearance: none;
@@ -123,13 +123,13 @@
     option {
       padding: 10px;
       text-align: center;
-      color: var(--sidestream-white);
-      background-color: var(--sidestream-dark-grey);
+      color: var(--tracxkick-white);
+      background-color: var(--tracxkick-dark-grey);
       
       /* Special styling for first option (placeholder) */
       &:first-child {
         font-style: italic;
-        color: var(--sidestream-light-grey);
+        color: var(--tracxkick-light-grey);
       }
     }
   }
@@ -148,7 +148,7 @@ form {
       margin-bottom: 8px;
       font-weight: 500;
       font-size: 14px;
-      color: var(--sidestream-light-grey);
+      color: var(--tracxkick-light-grey);
       text-align: center;
     }
     
@@ -156,9 +156,9 @@ form {
       width: 100%;
       padding: 12px 20px;
       border-radius: var(--input-radius);
-      background-color: var(--sidestream-medium-grey);
-      border: 1px solid var(--sidestream-medium-grey);
-      color: var(--sidestream-white);
+      background-color: var(--tracxkick-medium-grey);
+      border: 1px solid var(--tracxkick-medium-grey);
+      color: var(--tracxkick-white);
       font-size: 14px;
       transition: all var(--transition-speed);
       text-align: center;
@@ -166,19 +166,19 @@ form {
       
       &:focus {
         outline: none;
-        border-color: var(--sidestream-primary);
+        border-color: var(--tracxkick-primary);
         box-shadow: 0 0 0 2px rgba(221, 218, 200, 0.3);
       }
       
       &::placeholder {
-        color: var(--sidestream-light-grey);
+        color: var(--tracxkick-light-grey);
         text-align: center;
       }
     }
     
     /* Style the placeholder option in selects */
     select option[disabled] {
-      color: var(--sidestream-light-grey);
+      color: var(--tracxkick-light-grey);
     }
     
     /* Hide the spinner buttons for number inputs */
@@ -198,15 +198,15 @@ form {
         position: relative;
         display: flex;
         align-items: center;
-        background-color: var(--sidestream-medium-grey);
+        background-color: var(--tracxkick-medium-grey);
         border-radius: var(--input-radius);
-        border: 1px solid var(--sidestream-medium-grey);
+        border: 1px solid var(--tracxkick-medium-grey);
         padding: 0;
         overflow: hidden;
         height: 45px;
         
         &:focus-within {
-          border-color: var(--sidestream-primary);
+          border-color: var(--tracxkick-primary);
           box-shadow: 0 0 0 2px rgba(221, 218, 200, 0.3);
         }
         
@@ -230,15 +230,15 @@ form {
             align-items: center;
             justify-content: center;
             padding: 0 10px;
-            color: var(--sidestream-light-grey);
+            color: var(--tracxkick-light-grey);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
           }
           
           .browse-button {
-            background-color: var(--sidestream-primary);
-            color: var(--sidestream-black);
+            background-color: var(--tracxkick-primary);
+            color: var(--tracxkick-black);
             height: 100%;
             padding: 0 15px;
             display: flex;
@@ -284,8 +284,8 @@ form {
   }
   
   button[type="submit"] {
-    background-color: var(--sidestream-primary);
-    color: var(--sidestream-black);
+    background-color: var(--tracxkick-primary);
+    color: var(--tracxkick-black);
     border: none;
     padding: 12px 28px;
     border-radius: 30px;
@@ -313,16 +313,16 @@ form {
 // Force text color in Firefox
 @-moz-document url-prefix() {
   .existing-items .dropdown {
-    color: var(--sidestream-white) !important;
+    color: var(--tracxkick-white) !important;
     text-align: center !important;
     
     option {
       text-align: center;
-      background-color: var(--sidestream-dark-grey);
+      background-color: var(--tracxkick-dark-grey);
     }
     
     option[disabled] {
-      color: var(--sidestream-white) !important;
+      color: var(--tracxkick-white) !important;
       font-style: normal !important;
     }
   }
@@ -331,14 +331,14 @@ form {
 // Webkit-specific styles for the dropdown placeholder
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   .existing-items .dropdown {
-    color: var(--sidestream-white) !important;
+    color: var(--tracxkick-white) !important;
     
     option {
-      color: var(--sidestream-white);
+      color: var(--tracxkick-white);
     }
     
     option[disabled] {
-      color: var(--sidestream-white) !important;
+      color: var(--tracxkick-white) !important;
     }
   }
 }
@@ -349,8 +349,8 @@ input[type="file"] {
     border: none;
     padding: 5px 12px;
     border-radius: 25px;
-    background-color: var(--sidestream-primary);
-    color: var(--sidestream-black);
+    background-color: var(--tracxkick-primary);
+    color: var(--tracxkick-black);
     font-weight: 600;
     margin-right: 15px;
     cursor: pointer;
@@ -381,25 +381,25 @@ input[type="file"] {
 :host ::ng-deep {
   .p-multiselect {
     width: 100%;
-    background-color: var(--sidestream-medium-grey);
-    border: 1px solid var(--sidestream-medium-grey);
+    background-color: var(--tracxkick-medium-grey);
+    border: 1px solid var(--tracxkick-medium-grey);
     border-radius: var(--input-radius);
     min-height: 45px;
     transition: all var(--transition-speed);
     
     &:not(.p-disabled):hover {
-      border-color: var(--sidestream-primary);
+      border-color: var(--tracxkick-primary);
     }
     
     &:not(.p-disabled).p-focus {
       outline: none;
-      border-color: var(--sidestream-primary);
+      border-color: var(--tracxkick-primary);
       box-shadow: 0 0 0 2px rgba(221, 218, 200, 0.3);
     }
     
     .p-multiselect-label {
       padding: 12px 20px;
-      color: var(--sidestream-white);
+      color: var(--tracxkick-white);
       font-size: 14px;
       text-align: center;
       display: flex;
@@ -408,25 +408,25 @@ input[type="file"] {
       min-height: 45px;
       
       &.p-placeholder {
-        color: var(--sidestream-light-grey);
+        color: var(--tracxkick-light-grey);
         width: 100%;
         text-align: center;
       }
     }
     
     .p-multiselect-trigger {
-      color: var(--sidestream-light-grey);
+      color: var(--tracxkick-light-grey);
       width: 45px;
       
       &:hover {
-        color: var(--sidestream-white);
+        color: var(--tracxkick-white);
       }
     }
   }
   
   .p-multiselect-panel {
-    background-color: var(--sidestream-dark-grey);
-    border: 1px solid var(--sidestream-medium-grey);
+    background-color: var(--tracxkick-dark-grey);
+    border: 1px solid var(--tracxkick-medium-grey);
     border-radius: var(--panel-radius);
     box-shadow: none;
     
@@ -436,30 +436,30 @@ input[type="file"] {
       .p-multiselect-item {
         margin: 0;
         padding: 0.75rem 1rem;
-        color: var(--sidestream-white);
+        color: var(--tracxkick-white);
         border-radius: var(--input-radius);
         transition: all var(--transition-speed);
         
         &:hover {
-          background-color: var(--sidestream-medium-grey);
+          background-color: var(--tracxkick-medium-grey);
         }
         
         &.p-highlight {
-          background-color: var(--sidestream-primary);
-          color: var(--sidestream-black);
+          background-color: var(--tracxkick-primary);
+          color: var(--tracxkick-black);
         }
         
         .p-checkbox {
           margin-right: 0.5rem;
           
           .p-checkbox-box {
-            background-color: var(--sidestream-medium-grey);
-            border-color: var(--sidestream-light-grey);
+            background-color: var(--tracxkick-medium-grey);
+            border-color: var(--tracxkick-light-grey);
             border-radius: 4px;
             
             &.p-highlight {
-              background-color: var(--sidestream-primary);
-              border-color: var(--sidestream-primary);
+              background-color: var(--tracxkick-primary);
+              border-color: var(--tracxkick-primary);
             }
           }
         }
@@ -482,10 +482,10 @@ input[type="file"] {
     .section-title {
       font-size: 1.1rem;
       font-weight: 600;
-      color: var(--sidestream-white);
+      color: var(--tracxkick-white);
       margin-bottom: 1rem;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--sidestream-medium-grey);
+      border-bottom: 1px solid var(--tracxkick-medium-grey);
     }
     
     .singer-list {
@@ -498,13 +498,13 @@ input[type="file"] {
         align-items: center;
         gap: 0.5rem;
         padding: 0.5rem;
-        background-color: var(--sidestream-medium-grey);
+        background-color: var(--tracxkick-medium-grey);
         border-radius: var(--input-radius);
         transition: all var(--transition-speed);
         
         &:hover {
-          background-color: var(--sidestream-primary);
-          color: var(--sidestream-black);
+          background-color: var(--tracxkick-primary);
+          color: var(--tracxkick-black);
         }
         
         label {
@@ -521,6 +521,6 @@ input[type="file"] {
     gap: 0.5rem;
     margin-top: 1.5rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--sidestream-medium-grey);
+    border-top: 1px solid var(--tracxkick-medium-grey);
   }
 }
