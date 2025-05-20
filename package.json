@@ -10,7 +10,7 @@
   "keywords": [],
   "author": "Ayush Srivastav <ayushsrivastav11@gmail.com>",
   "license": "ISC",
-  "description": "Side Stream Music streaming service",
+  "description": "TracxKick Music streaming service",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.777.0",
     "@aws-sdk/s3-request-presigner": "^3.777.0",
