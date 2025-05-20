@@ -3,6 +3,7 @@ FROM node:22 as build
 
 WORKDIR /app
 COPY client/ ./
+COPY environment.prod.ts ./src/environments/environment.prod.ts
 RUN npm install && npm run build --configuration=production
 
 # Stage 2: Serve using nginx
