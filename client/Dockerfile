@@ -7,5 +7,5 @@ RUN npm install && npm run build --configuration=production
 
 # Stage 2: Serve using nginx
 FROM nginx:alpine
-COPY --from=build /app/dist/client /usr/share/nginx/html
+COPY --from=build /app/dist/client/browser /usr/share/nginx/html
 COPY client/nginx.conf /etc/nginx/conf.d/default.conf
