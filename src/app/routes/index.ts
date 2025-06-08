@@ -2,7 +2,6 @@
 import Koa from 'koa';
 import Router from 'koa-router';
 import fs from 'fs';
-import path from 'path';
 import config from '../../config/config';
 
 // Import route modules
@@ -26,7 +25,6 @@ class RouteManager {
   }
 
   private configureRoutes() {
-    // Register all other routes after the unauthorized handler
     this.registerRoutes(ClientRoutes, '');
     this.registerRoutes(AuthRoutes, '');
     this.registerRoutes(UploadRoutes, '');
@@ -98,7 +96,7 @@ class RouteManager {
   private handleUnauthorizedAccess() {
     this.mainRouter.get('/', async ctx => {
       try {
-        const filePath = path.join(__dirname, '../pages/unauthorized.html');
+        const filePath = './src/app/pages/unauthorized.html';
         let htmlContent = await fs.promises.readFile(filePath, 'utf-8');
 
         // Replace the placeholder with the actual client URL
