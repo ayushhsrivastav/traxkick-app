@@ -1,6 +1,9 @@
 // Dependencies
 import Koa from 'koa';
 import Router from 'koa-router';
+import fs from 'fs';
+import path from 'path';
+import config from '../../config/config';
 
 // Import route modules
 import ClientRoutes from './client';
@@ -14,8 +17,8 @@ class RouteManager {
 
   constructor() {
     this.mainRouter = new Router();
-    this.configureRoutes();
     this.handleUnauthorizedAccess();
+    this.configureRoutes();
   }
 
   public getRouter() {
@@ -23,6 +26,7 @@ class RouteManager {
   }
 
   private configureRoutes() {
+    // Register all other routes after the unauthorized handler
     this.registerRoutes(ClientRoutes, '');
     this.registerRoutes(AuthRoutes, '');
     this.registerRoutes(UploadRoutes, '');
@@ -92,8 +96,21 @@ class RouteManager {
   }
 
   private handleUnauthorizedAccess() {
-    this.mainRouter.get('/', ctx => {
-      ctx.body = '<h1>Unauthorized Access</h1>';
+    this.mainRouter.get('/', async ctx => {
+      try {
+        const filePath = path.join(__dirname, '../pages/unauthorized.html');
+        let htmlContent = await fs.promises.readFile(filePath, 'utf-8');
+
+        // Replace the placeholder with the actual client URL
+        htmlContent = htmlContent.replace('{{CLIENT_URL}}', config.clientUrl);
+
+        ctx.type = 'html';
+        ctx.body = htmlContent;
+      } catch (error) {
+        console.error('Error serving unauthorized page:', error);
+        ctx.status = 500;
+        ctx.body = 'Internal Server Error';
+      }
     });
   }
 }
