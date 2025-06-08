@@ -57,8 +57,14 @@ class Server {
       helmet.contentSecurityPolicy({
         directives: {
           defaultSrc: ["'self'"],
-          styleSrc: ["'self'"],
+          styleSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            'https://fonts.googleapis.com',
+          ],
           scriptSrc: ["'unsafe-inline'"],
+          fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+          imgSrc: ["'self'", 'data:', 'https:'],
         },
       })
     );
