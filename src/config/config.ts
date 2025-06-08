@@ -4,7 +4,7 @@ const env = process.env;
 
 if (env.NODE_ENV)
   dotEnv.config({ path: `src/app/environments/${env.NODE_ENV}.env` });
-else dotEnv.config({ path: '../../.env' });
+else dotEnv.config({ path: './.env' });
 
 export default {
   port: Number(env.PORT) || 3000,
