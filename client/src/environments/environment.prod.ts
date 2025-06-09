@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  serverUrl: '',
+  serverUrl: 'https://api.traxkick.com',
 };
