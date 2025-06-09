@@ -42,9 +42,13 @@ class Server {
       koaBody({
         multipart: true, // Enable file uploads
         json: true,
+        formLimit: '50mb',
+        jsonLimit: '50mb',
+        textLimit: '50mb',
         formidable: {
-          uploadDir: 'uploads/temp', // Directory for file uploads
-          keepExtensions: true, // Keep file extensions
+          maxFileSize: 50 * 1024 * 1024,
+          uploadDir: 'uploads/temp',
+          keepExtensions: true,
         },
       })
     );
