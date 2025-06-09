@@ -24,8 +24,8 @@ export class HomeComponent implements AfterViewInit {
     this.loadingService.show();
     this.apiService.request('GET', 'info/home-info', null).subscribe(res => {
       this.loadingService.hide();
-      this.albums = res.featuredAlbums;
-      this.songs = res.trendingSongs;
+      this.albums = res?.featuredAlbums || [];
+      this.songs = res?.trendingSongs || [];
     });
   }
 
