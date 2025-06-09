@@ -19,6 +19,7 @@ class Server {
     this.app = new koa();
     this.port = config.port;
     this.router = routes.getRouter();
+    this.app.proxy = true;
   }
 
   async start() {

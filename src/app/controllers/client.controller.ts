@@ -12,15 +12,17 @@ export async function login(ctx: Context) {
   if (response?.status === 'success') {
     ctx.cookies.set('access_token', response.access_token, {
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'none',
       secure: config.is_server,
       path: '/',
+      domain: config.domain,
     });
     ctx.cookies.set('refresh_token', response.refresh_token, {
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'none',
       secure: config.is_server,
       path: '/',
+      domain: config.domain,
     });
     ctx.status = 200;
     ctx.body = {
@@ -47,15 +49,17 @@ export async function signup(ctx: Context) {
   if (response?.status === 'success') {
     ctx.cookies.set('access_token', response.access_token, {
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'none',
       secure: config.is_server,
       path: '/',
+      domain: config.domain,
     });
     ctx.cookies.set('refresh_token', response.refresh_token, {
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'none',
       secure: config.is_server,
       path: '/',
+      domain: config.domain,
     });
     ctx.status = 200;
     ctx.body = {
@@ -79,15 +83,17 @@ export async function signup(ctx: Context) {
 export async function logout(ctx: Context) {
   ctx.cookies.set('access_token', '', {
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: 'none',
     secure: config.is_server,
     path: '/',
+    domain: config.domain,
   });
   ctx.cookies.set('refresh_token', '', {
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: 'none',
     secure: config.is_server,
     path: '/',
+    domain: config.domain,
   });
   ctx.status = 200;
   ctx.body = {

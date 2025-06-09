@@ -11,6 +11,7 @@ export default {
   is_server: env.IS_SERVER === 'true',
   environment: env.ENVIRONMENT,
   clientUrl: env.CLIENT_URL!,
+  domain: env.DOMAIN!,
   serverUrl: env.SERVER_URL,
   database: {
     url: env.DATABASE_URL!,
