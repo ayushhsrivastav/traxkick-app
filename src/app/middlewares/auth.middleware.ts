@@ -35,11 +35,8 @@ export const isAdmin = async (ctx: Context, next: Next) => {
   try {
     const payload = verifyToken(token);
 
-    if (!payload?.is_admin) {
-      ctx.status = 206;
-      ctx.body = { status: 'failed', message: 'Unauthorized' };
-      return;
-    }
+    if (!payload?.is_admin) ctx.state.admin = false;
+    else ctx.state.admin = true;
     await next();
   } catch {
     ctx.status = 403;

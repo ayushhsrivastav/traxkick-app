@@ -221,17 +221,21 @@ $accent: #1db954;
     opacity: 0;
     transform: translateX(20px);
     transition: all 0.3s ease;
+    max-width: calc(100% - 80px);
+    word-wrap: break-word;
 
     h4 {
       color: $text-primary;
-      font-size: 16px;
+      font-size: 14px;
       margin: 0 0 4px;
+      line-height: 1.2;
     }
 
     p {
       color: $text-secondary;
-      font-size: 14px;
+      font-size: 12px;
       margin: 0;
+      line-height: 1.2;
     }
   }
 }
