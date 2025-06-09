@@ -21,9 +21,9 @@ export async function getRefreshToken(ctx: Context) {
 
     ctx.cookies.set('access_token', newAccessToken, {
       httpOnly: true,
-      sameSite: 'none',
+      ...(config.is_server && { sameSite: 'none' }),
       secure: config.is_server,
-      domain: config.domain,
+      ...(config.is_server && { domain: config.domain }),
       path: '/',
     });
 
