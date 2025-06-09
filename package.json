@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_ENV=dev nodemon --watch src --exec ts-node src/index.ts",
     "dev-live": "NODE_ENV=live nodemon --watch src --exec ts-node src/index.ts",
-    "build": "tsc && npx cpx \"src/app/pages/**/*\" dist/client/app/pages",
+    "build": "tsc && npx cpx \"src/app/pages/**/*\" dist/src/app/pages",
     "live": "ts-node src/index.ts"
   },
   "keywords": [],
